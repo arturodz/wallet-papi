@@ -80,6 +80,17 @@ export const equipmentInput = z.object({
   notes: optionalString,
 });
 
+export const documentInput = z.object({
+  blobUrl: z.string().url("expected a blob URL"),
+  docType: z.preprocess(
+    emptyToUndefined,
+    z.enum(["invoice", "logbook", "warranty", "photo"]).optional(),
+  ),
+  extractedJson: optionalString,
+  entityType: z.enum(["service", "expense", "squawk", "equipment"]),
+  entityId: z.string().uuid("expected an entity id"),
+});
+
 export const aircraftInput = z.object({
   tailNumber: z.string().min(1, "tail number is required"),
   make: optionalString,
@@ -98,3 +109,4 @@ export type IntervalInput = z.infer<typeof intervalInput>;
 export type ServiceInput = z.infer<typeof serviceInput>;
 export type ExpenseInput = z.infer<typeof expenseInput>;
 export type AircraftInput = z.infer<typeof aircraftInput>;
+export type DocumentInput = z.infer<typeof documentInput>;
