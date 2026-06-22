@@ -10,8 +10,10 @@ export default auth.middleware({ loginUrl: "/sign-in" });
 
 export const config = {
   // Run on all routes except Next internals, static files, the auth API
-  // (handled by the route handler), and the sign-in page itself.
+  // (handled by the route handler), the sign-in page, and the PWA assets
+  // (manifest/service-worker/offline shell must be publicly fetchable for
+  // install + offline to work).
   matcher: [
-    "/((?!api/auth|sign-in|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+    "/((?!api/auth|sign-in|offline|manifest.webmanifest|sw.js|icons|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 };
