@@ -61,8 +61,13 @@ export async function updateSquawk(id: string, input: unknown) {
   return row;
 }
 
+const SQUAWK_STATUSES: readonly SquawkStatus[] = ["open", "deferred", "resolved"];
+
 export async function setSquawkStatus(id: string, status: SquawkStatus) {
   await requireRole("editor");
+  // `status` is only a compile-time type; validate at runtime since this is a
+  // server action reachable with arbitrary client input.
+  if (!SQUAWK_STATUSES.includes(status)) throw new Error("INVALID_STATUS");
   const [existing] = await db
     .select({ resolvedDate: squawks.resolvedDate })
     .from(squawks)

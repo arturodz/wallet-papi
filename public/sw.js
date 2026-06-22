@@ -8,15 +8,19 @@
 // this minimal SW gives us the same behavior with zero build-tool conflict.
 //
 // Strategy:
-//   - Navigations (GET, mode "navigate"): network-first, fall back to the
-//     last cached copy of that page, then the precached /offline shell.
+//   - Navigations (GET, mode "navigate"): network-first, falling back ONLY to
+//     the precached static /offline shell. We deliberately do NOT cache page
+//     HTML: authenticated pages (TCO, expenses, squawks) render private data
+//     server-side, and CacheStorage is not cleared on sign-out — caching them
+//     would leak one user's financials to the next person on a shared device
+//     (the mechanic / prospective-buyer viewer in the threat model).
 //   - Static assets (_next/static, /icons, fonts): stale-while-revalidate.
+//     These are public, non-personalized, content-hashed bundles.
 //   - Everything non-GET (server actions / mutations): passed straight to the
 //     network, never cached or intercepted. Offline = read-only by design.
 
-const VERSION = "v1";
+const VERSION = "v2";
 const PRECACHE = `papi-precache-${VERSION}`;
-const PAGES = `papi-pages-${VERSION}`;
 const ASSETS = `papi-assets-${VERSION}`;
 
 // Minimal app shell precached on install.
@@ -32,7 +36,7 @@ self.addEventListener("install", (event) => {
 });
 
 self.addEventListener("activate", (event) => {
-  const keep = new Set([PRECACHE, PAGES, ASSETS]);
+  const keep = new Set([PRECACHE, ASSETS]);
   event.waitUntil(
     caches
       .keys()
@@ -43,19 +47,13 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// Network-first: try the network, cache success, fall back to cache then shell.
+// Network-first for navigations. We never cache the page HTML (it can contain
+// per-user private data); on network failure we fall back only to the static
+// /offline shell. This keeps offline strictly read-only AND leak-free.
 async function networkFirst(request) {
-  const cache = await caches.open(PAGES);
   try {
-    const fresh = await fetch(request);
-    // Only cache complete, basic GET responses.
-    if (fresh && fresh.status === 200 && fresh.type === "basic") {
-      cache.put(request, fresh.clone());
-    }
-    return fresh;
+    return await fetch(request);
   } catch {
-    const cached = await cache.match(request);
-    if (cached) return cached;
     const offline = await caches.match("/offline");
     if (offline) return offline;
     return new Response("Offline", {
