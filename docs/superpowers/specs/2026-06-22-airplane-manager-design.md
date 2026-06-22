@@ -8,8 +8,9 @@
 A personal aircraft maintenance & expense tracker for a single privately-owned
 plane. It **complements ForeFlight** (which owns flight planning and the
 logbook) by covering what ForeFlight does not: maintenance service history,
-recurring service intervals, expenses, squawks, equipment/warranties, and the
-documents behind all of it. Phone-first (PWA), used at the hangar.
+recurring service intervals, expenses, **total cost of ownership**, squawks,
+equipment/warranties, and the documents behind all of it. Phone-first (PWA),
+used at the hangar.
 
 Out of scope (deliberate): flight planning, pilot logbook, formal Airworthiness
 Directive (AD) subscription/tracking engine, life-limited-parts management,
@@ -29,7 +30,7 @@ multi-aircraft fleets, equipment removal/replacement history.
 
 One aircraft, modeled as a row so other tables FK cleanly.
 
-- **aircraft** — tail_number, make, model, year, serial, `current_tach`, `current_hobbs`, `hours_updated_at`. Hours are updated manually (no ForeFlight API).
+- **aircraft** — tail_number, make, model, year, serial, `current_tach`, `current_hobbs`, `hours_updated_at`, `acquired_date`, `acquisition_tach`. Hours are updated manually (no ForeFlight API). The acquisition fields anchor cost-per-hour in the TCO report.
 - **profiles** — user_id (from Neon Auth), role: `owner | editor | viewer`.
 - **equipment** — name, category, make, model, serial, install_date, `warranty_expiry`, notes.
 - **intervals** — name, kind (`calendar | hours | both`), interval_months, interval_hours, `last_done_date`, `last_done_hours`, optional `equipment_id`. Next-due is **computed, not stored**.
@@ -41,6 +42,17 @@ One aircraft, modeled as a row so other tables FK cleanly.
 Key decisions:
 1. **Money lives only in `expenses`** — avoids double-entry; "total spent" is one query.
 2. **`documents` is polymorphic** — one pipeline instead of four near-identical attachment tables.
+3. **Acquisition is an expense row** (`category = 'acquisition'`), not a special field — keeps the single-source-of-truth invariant and folds the purchase price into TCO automatically.
+
+## Total cost of ownership (TCO)
+
+A report over the `expenses` ledger (since all money lives there). Surfaces:
+- **Lifetime total** — sum of all expenses, acquisition included.
+- **Breakdown by category** — acquisition, maintenance, fuel, hangar, insurance, subscriptions, etc.
+- **Monthly burn** — rolling spend over time.
+- **Cost per hour** — total expenses ÷ (`current_tach − acquisition_tach`).
+
+Lives in the expenses/logbook UI. No new storage beyond the two aircraft acquisition fields above.
 
 ## Document + AI pipeline
 
