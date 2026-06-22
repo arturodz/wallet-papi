@@ -81,4 +81,5 @@ No per-field permissions.
 ## PWA & testing
 
 - **PWA:** web manifest + service worker; installable; offline app-shell with cached read views (writes require connection).
+- **Devices:** phone-first, but **iPad is a first-class target** — responsive layouts adapt to tablet width (e.g. multi-column dashboard, side-by-side detail panes), not a stretched phone view. Installable as a PWA on iPadOS as well.
 - **Testing:** unit tests cover the **non-trivial logic** — interval/due-date math and role checks. CRUD/forms do not get a dedicated suite.
