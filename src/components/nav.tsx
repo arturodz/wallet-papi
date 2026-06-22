@@ -5,6 +5,8 @@ const links = [
   { href: "/intervals", label: "Intervals" },
   { href: "/services", label: "Services" },
   { href: "/expenses", label: "Expenses" },
+  { href: "/squawks", label: "Squawks" },
+  { href: "/equipment", label: "Equipment" },
   { href: "/tco", label: "TCO" },
 ];
 
