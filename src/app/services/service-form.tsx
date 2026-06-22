@@ -16,7 +16,11 @@ import {
 const selectClass =
   "h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
 
-export function ServiceForm() {
+export function ServiceForm({
+  intervals,
+}: {
+  intervals: { id: string; name: string }[];
+}) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -31,6 +35,7 @@ export function ServiceForm() {
       vendor: String(fd.get("vendor") ?? ""),
       category: String(fd.get("category") ?? ""),
       tachAtService: String(fd.get("tachAtService") ?? ""),
+      satisfiesIntervalId: String(fd.get("satisfiesIntervalId") ?? ""),
     };
     startTransition(async () => {
       try {
@@ -87,6 +92,24 @@ export function ServiceForm() {
               ))}
             </select>
           </div>
+          {intervals.length > 0 && (
+            <div className="grid gap-1.5 sm:col-span-2">
+              <Label htmlFor="svc-interval">Marks interval complete</Label>
+              <select
+                id="svc-interval"
+                name="satisfiesIntervalId"
+                className={selectClass}
+                defaultValue=""
+              >
+                <option value="">— none —</option>
+                {intervals.map((i) => (
+                  <option key={i.id} value={i.id}>
+                    {i.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <div className="flex items-center gap-3 sm:col-span-2">
             <Button type="submit" disabled={pending}>
               {pending ? "Logging…" : "Log service"}

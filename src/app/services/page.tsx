@@ -1,6 +1,6 @@
-import { desc } from "drizzle-orm";
+import { asc, desc } from "drizzle-orm";
 import { db } from "@/db";
-import { services } from "@/db/schema";
+import { services, intervals } from "@/db/schema";
 import { getCurrentProfile } from "@/lib/auth/guard";
 import { canWrite, type Role } from "@/lib/auth/roles";
 import { ServiceForm } from "./service-form";
@@ -28,12 +28,16 @@ export default async function ServicesPage() {
 
   const writable = canWrite(profile.role as Role);
   const rows = await db.select().from(services).orderBy(desc(services.date));
+  const intervalOptions = await db
+    .select({ id: intervals.id, name: intervals.name })
+    .from(intervals)
+    .orderBy(asc(intervals.name));
 
   return (
     <main className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
       <h1 className="font-mono text-2xl">Maintenance Log</h1>
 
-      {writable && <ServiceForm />}
+      {writable && <ServiceForm intervals={intervalOptions} />}
 
       {rows.length === 0 ? (
         <p className="text-muted-foreground">
