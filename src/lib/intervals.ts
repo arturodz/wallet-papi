@@ -107,6 +107,19 @@ export function computeIntervalStatus(
   return result;
 }
 
+// Worst-first sort key: overdue (0) → due_soon (1) → ok (2) → unknown/none (3).
+const SORT_RANK: Record<string, number> = {
+  overdue: 0,
+  due_soon: 1,
+  ok: 2,
+  unknown: 3,
+  none: 3,
+};
+
+export function severityRank(status: string): number {
+  return SORT_RANK[status] ?? 3;
+}
+
 export function warrantyStatus(
   warrantyExpiry: string | null,
   now: Date,
