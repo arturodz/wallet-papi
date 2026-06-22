@@ -59,6 +59,27 @@ export const intervalInput = z
     { message: "intervalHours is required for hours/both", path: ["intervalHours"] },
   );
 
+export const squawkInput = z.object({
+  title: z.string().min(1, "title is required"),
+  description: optionalString,
+  severity: optionalString,
+  status: z.enum(["open", "deferred", "resolved"]).default("open"),
+  openedDate: dateString,
+  equipmentId: optionalUuid,
+  resolvedByServiceId: optionalUuid,
+});
+
+export const equipmentInput = z.object({
+  name: z.string().min(1, "name is required"),
+  category: optionalString,
+  make: optionalString,
+  model: optionalString,
+  serial: optionalString,
+  installDate: z.preprocess(emptyToUndefined, dateString.optional()),
+  warrantyExpiry: z.preprocess(emptyToUndefined, dateString.optional()),
+  notes: optionalString,
+});
+
 export const aircraftInput = z.object({
   tailNumber: z.string().min(1, "tail number is required"),
   make: optionalString,
@@ -71,6 +92,8 @@ export const aircraftInput = z.object({
   acquisitionTach: optionalNumber,
 });
 
+export type SquawkInput = z.infer<typeof squawkInput>;
+export type EquipmentInput = z.infer<typeof equipmentInput>;
 export type IntervalInput = z.infer<typeof intervalInput>;
 export type ServiceInput = z.infer<typeof serviceInput>;
 export type ExpenseInput = z.infer<typeof expenseInput>;
