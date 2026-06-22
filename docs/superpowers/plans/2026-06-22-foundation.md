@@ -395,7 +395,9 @@ import { auth } from "./server";
 import { hasAtLeast, type Role } from "./roles";
 
 export async function getCurrentProfile() {
-  const session = await auth.getSession();
+  // Neon Auth (Better Auth compatible) returns a `{ data, error }` envelope;
+  // the session lives under `data`, with the user under `data.user`.
+  const { data: session } = await auth.getSession();
   if (!session?.user) return null;
 
   const userId = session.user.id;
@@ -497,9 +499,33 @@ git add -A && git commit -m "feat: aircraft dashboard stub with role badge"
 
 ---
 
+## Task 9: Auth routing + sign-in UI
+
+**Context:** Tasks 7–8 created the Neon Auth server/client instances and the `requireRole` guard, but never mounted the auth HTTP endpoints or shipped any sign-in surface — so `getSession()` always returned an empty session and the app was unusable. This task wires the real handler/middleware and adds a minimal sign-in/sign-out UI.
+
+**Real API used (verified against `@neondatabase/auth@0.4.2-beta` installed types, `dist/next/server/index.d.mts` + `dist/next/index.d.mts`):**
+- `createNeonAuth(config)` returns a `NeonAuth` instance exposing all Better Auth server methods **plus** `handler()` and `middleware(config?)`.
+- `auth.handler()` → `{ GET, POST, PUT, DELETE, PATCH }` route handlers. Each takes `(request: Request, { params }: { params: Promise<{ path: string[] }> })`. Because the param is named `path`, the catch-all route folder **must** be `[...path]`.
+- `auth.middleware({ loginUrl })` → `(request: NextRequest) => Promise<NextResponse>`; refreshes the session cookie and redirects unauthenticated requests to `loginUrl` (default `/auth/sign-in`).
+- Client (`createAuthClient()` from `@neondatabase/auth/next`): `authClient.signIn.email({ email, password, callbackURL? })`, `authClient.signUp.email({ name, email, password, callbackURL? })`, `authClient.signIn.social({ provider: "google", callbackURL? })`, `authClient.signOut()`. All return a `{ data, error }` better-fetch envelope (no throw by default).
+
+**Files:**
+- Create: `src/app/api/auth/[...path]/route.ts` — `export const { GET, POST } = auth.handler();`
+- Create: `src/proxy.ts` — `export default auth.middleware({ loginUrl: "/sign-in" });` with a `matcher` excluding `api/auth`, `sign-in`, Next internals, and static assets. (Next.js 16 deprecated the `middleware` filename in favor of `proxy`; the helper's signature is identical, so it slots straight into the proxy default export and the build emits no deprecation warning.)
+- Create: `src/app/sign-in/page.tsx` — client component; email+password sign-in/sign-up toggle plus a "Continue with Google" social button; shadcn `Card`/`Input`/`Label`/`Button`.
+- Create: `src/components/sign-out-button.tsx` — client `signOut()` button.
+- Add: shadcn `input` + `label` components.
+- Modify: `src/app/page.tsx` — the no-profile branch now links to `/sign-in`; the signed-in header shows the role badge + a sign-out button.
+
+**Manual step remaining (human):** Google OAuth must be enabled for this Neon Auth project and the redirect/callback URL (the deployed origin + `/api/auth/...`) registered in the Neon Auth console / Google OAuth client. Email+password works without extra config.
+
+**Verification:** `npm run build` ✓ (routes `/`, `/sign-in`, `/api/auth/[...path]`, Proxy middleware all registered), `tsc --noEmit` ✓.
+
+---
+
 ## Self-Review
 
 - **Spec coverage (foundation slice):** stack ✓ (Tasks 1–4), full data model ✓ (Task 5 — defines every table the later plans need), Neon Auth + owner/editor/viewer roles ✓ (Tasks 6–7), aircraft record + manual hours fields ✓ (Tasks 5, 8). Document/Gemini, interval math, dashboard statuses, PWA, iPad layouts are deliberately deferred to Plans 2–6.
 - **Placeholders:** none — every code step has complete code; the one manual SQL grant is intentional and documented.
 - **Type consistency:** `Role` type and `hasAtLeast`/`canWrite`/`canManageUsers` names match between `roles.ts`, its test, and `guard.ts`; schema table/column names match the queries in `guard.ts` and `page.tsx`.
-- **Note:** Neon Auth's exact session shape (`session.user.id` / `.email`) should be confirmed against the installed `@neondatabase/auth` version during Task 7; adjust property access if the SDK differs.
+- **Note:** Neon Auth's session shape was confirmed against `@neondatabase/auth@0.4.2-beta`: `auth.getSession()` returns `{ data, error }`, so `guard.ts` destructures `const { data: session } = await auth.getSession()` and reads `session.user.id` / `session.user.email`. Auth routing + sign-in UI added in Task 9.
