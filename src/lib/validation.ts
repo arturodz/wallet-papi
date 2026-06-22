@@ -40,6 +40,25 @@ export const expenseInput = z.object({
   serviceId: optionalUuid,
 });
 
+export const intervalInput = z
+  .object({
+    name: z.string().min(1, "name is required"),
+    kind: z.enum(["calendar", "hours", "both"]),
+    intervalMonths: optionalNumber,
+    intervalHours: optionalNumber,
+    lastDoneDate: z.preprocess(emptyToUndefined, dateString.optional()),
+    lastDoneHours: optionalNumber,
+    equipmentId: optionalUuid,
+  })
+  .refine(
+    (v) => v.kind === "hours" || v.intervalMonths != null,
+    { message: "intervalMonths is required for calendar/both", path: ["intervalMonths"] },
+  )
+  .refine(
+    (v) => v.kind === "calendar" || v.intervalHours != null,
+    { message: "intervalHours is required for hours/both", path: ["intervalHours"] },
+  );
+
 export const aircraftInput = z.object({
   tailNumber: z.string().min(1, "tail number is required"),
   make: optionalString,
@@ -52,6 +71,7 @@ export const aircraftInput = z.object({
   acquisitionTach: optionalNumber,
 });
 
+export type IntervalInput = z.infer<typeof intervalInput>;
 export type ServiceInput = z.infer<typeof serviceInput>;
 export type ExpenseInput = z.infer<typeof expenseInput>;
 export type AircraftInput = z.infer<typeof aircraftInput>;
