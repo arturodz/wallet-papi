@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Nav } from "@/components/nav";
+import { AppChrome } from "@/components/app-chrome";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 
 const geistSans = Geist({
@@ -53,9 +53,7 @@ export default function RootLayout({
     >
       <body className="min-h-full bg-background text-foreground">
         <ServiceWorkerRegister />
-        <Nav />
-        {/* Content offset: bottom tab bar on phone (pb-24), sidebar on md+ (pl-56). */}
-        <div className="min-h-svh pb-24 md:pb-0 md:pl-56">{children}</div>
+        <AppChrome>{children}</AppChrome>
       </body>
     </html>
   );
