@@ -51,10 +51,11 @@ export default function RootLayout({
       lang="en"
       className={`dark ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body className="min-h-full bg-background text-foreground">
         <ServiceWorkerRegister />
         <Nav />
-        {children}
+        {/* Content offset: bottom tab bar on phone (pb-24), sidebar on md+ (pl-56). */}
+        <div className="min-h-svh pb-24 md:pb-0 md:pl-56">{children}</div>
       </body>
     </html>
   );

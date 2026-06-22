@@ -85,9 +85,9 @@ export function DocumentScan({
         <Button
           type="button"
           variant="outline"
-          size="sm"
           disabled={!blobEnabled || pending}
           onClick={() => inputRef.current?.click()}
+          className="min-h-11 px-4"
         >
           {pending ? "Scanning…" : "Scan document"}
         </Button>

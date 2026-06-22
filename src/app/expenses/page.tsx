@@ -39,7 +39,7 @@ export default async function ExpensesPage() {
   );
 
   return (
-    <main className="mx-auto max-w-4xl space-y-6 p-6">
+    <main className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
       <h1 className="font-mono text-2xl">Expense Ledger</h1>
 
       {writable && (

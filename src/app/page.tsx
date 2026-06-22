@@ -91,9 +91,16 @@ export default async function Home() {
     : "never";
 
   return (
-    <main className="mx-auto max-w-4xl space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <h1 className="font-mono text-2xl">{plane?.tailNumber ?? "No aircraft"}</h1>
+    <main className="mx-auto max-w-5xl space-y-6 p-4 sm:p-6">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            Call-sign
+          </div>
+          <h1 className="font-mono text-2xl tabular-nums">
+            {plane?.tailNumber ?? "No aircraft"}
+          </h1>
+        </div>
         <div className="flex items-center gap-3">
           <Badge>{profile.role}</Badge>
           <SignOutButton />
@@ -112,6 +119,7 @@ export default async function Home() {
         />
       </div>
 
+      <div className="grid gap-6 lg:grid-cols-2">
       {/* Airworthiness list */}
       <section className="space-y-3">
         <h2 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
@@ -156,19 +164,23 @@ export default async function Home() {
       </section>
 
       {/* Open squawks preview */}
-      {openSquawks.length > 0 && (
-        <section className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-              Open Squawks
-            </h2>
-            <Link
-              href="/squawks"
-              className="font-mono text-xs text-primary underline-offset-4 hover:underline"
-            >
-              View all
-            </Link>
-          </div>
+      <section className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            Open Squawks
+          </h2>
+          <Link
+            href="/squawks"
+            className="font-mono text-xs text-primary underline-offset-4 hover:underline"
+          >
+            View all
+          </Link>
+        </div>
+        {openSquawks.length === 0 ? (
+          <p className="text-muted-foreground">
+            Pre-flight: no open squawks.
+          </p>
+        ) : (
           <ul className="space-y-2">
             {openSquawks.slice(0, 5).map((s) => (
               <li
@@ -184,8 +196,9 @@ export default async function Home() {
               </li>
             ))}
           </ul>
-        </section>
-      )}
+        )}
+      </section>
+      </div>
     </main>
   );
 }

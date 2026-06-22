@@ -33,7 +33,7 @@ export default async function EquipmentPage() {
   const rows = await db.select().from(equipment);
 
   return (
-    <main className="mx-auto max-w-4xl space-y-6 p-6">
+    <main className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
       <h1 className="font-mono text-2xl">Equipment</h1>
 
       {writable && <EquipmentForm />}

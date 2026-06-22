@@ -30,7 +30,7 @@ export default async function ServicesPage() {
   const rows = await db.select().from(services).orderBy(desc(services.date));
 
   return (
-    <main className="mx-auto max-w-4xl space-y-6 p-6">
+    <main className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
       <h1 className="font-mono text-2xl">Maintenance Log</h1>
 
       {writable && <ServiceForm />}

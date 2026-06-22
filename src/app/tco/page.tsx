@@ -50,7 +50,7 @@ export default async function TcoPage() {
   const maxCat = Math.max(1, ...categories.map(([, c]) => c));
 
   return (
-    <main className="mx-auto max-w-4xl space-y-6 p-6">
+    <main className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
       <h1 className="font-mono text-2xl">Total Cost of Ownership</h1>
 
       <div className="grid gap-4 sm:grid-cols-2">

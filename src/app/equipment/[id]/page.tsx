@@ -81,7 +81,7 @@ export default async function EquipmentDetailPage({
   const makeModel = [item.make, item.model].filter(Boolean).join(" ");
 
   return (
-    <main className="mx-auto max-w-4xl space-y-6 p-6">
+    <main className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
       <div className="flex items-center justify-between gap-3">
         <div>
           <Link
