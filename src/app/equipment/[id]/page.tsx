@@ -9,6 +9,8 @@ import { computeIntervalStatus, warrantyStatus } from "@/lib/intervals";
 import type { SquawkStatus } from "@/lib/squawks";
 import { StatusBadge } from "@/components/status-badge";
 import { SquawkStatusBadge } from "@/app/squawks/squawk-status-badge";
+import { DocumentList } from "@/components/document-list";
+import { listDocuments } from "@/app/actions/documents";
 import { DeleteEquipmentButton } from "../delete-equipment-button";
 import {
   Card,
@@ -62,12 +64,13 @@ export default async function EquipmentDetailPage({
   const [plane] = await db.select().from(aircraft).limit(1);
   const currentTach = plane?.currentTach ?? 0;
 
-  const [linkedIntervals, openSquawks] = await Promise.all([
+  const [linkedIntervals, openSquawks, docs] = await Promise.all([
     db.select().from(intervals).where(eq(intervals.equipmentId, id)),
     db
       .select()
       .from(squawks)
       .where(and(eq(squawks.equipmentId, id), eq(squawks.status, "open"))),
+    listDocuments("equipment", id),
   ]);
 
   const computedIntervals = linkedIntervals.map((r) => ({
@@ -168,6 +171,11 @@ export default async function EquipmentDetailPage({
             ))}
           </ul>
         )}
+      </section>
+
+      <section className="space-y-2">
+        <h2 className="font-mono text-lg">Documents</h2>
+        <DocumentList documents={docs} writable={writable} />
       </section>
     </main>
   );

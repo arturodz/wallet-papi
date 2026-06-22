@@ -4,6 +4,7 @@ import { expenses, services } from "@/db/schema";
 import { getCurrentProfile } from "@/lib/auth/guard";
 import { canWrite, type Role } from "@/lib/auth/roles";
 import { toCents, formatUSD } from "@/lib/money";
+import { aiEnabled, blobEnabled } from "@/lib/env";
 import { ExpenseForm } from "./expense-form";
 import { DeleteExpenseButton } from "./delete-expense-button";
 import {
@@ -41,7 +42,13 @@ export default async function ExpensesPage() {
     <main className="mx-auto max-w-4xl space-y-6 p-6">
       <h1 className="font-mono text-2xl">Expense Ledger</h1>
 
-      {writable && <ExpenseForm services={serviceRows} />}
+      {writable && (
+        <ExpenseForm
+          services={serviceRows}
+          aiEnabled={aiEnabled()}
+          blobEnabled={blobEnabled()}
+        />
+      )}
 
       {rows.length === 0 ? (
         <p className="text-muted-foreground">
