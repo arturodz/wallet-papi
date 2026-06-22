@@ -52,25 +52,6 @@ export default function SignInPage() {
     }
   }
 
-  async function handleGoogle() {
-    setError(null);
-    setPending(true);
-    try {
-      // Redirects to Google's OAuth consent screen, then back to callbackURL.
-      const res = await authClient.signIn.social({
-        provider: "google",
-        callbackURL: "/",
-      });
-      if (res.error) {
-        setError(res.error.message ?? "Google sign-in failed.");
-        setPending(false);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unexpected error.");
-      setPending(false);
-    }
-  }
-
   return (
     <main className="dark flex min-h-svh items-center justify-center bg-background p-6 text-foreground">
       <Card className="w-full max-w-sm border-border/60 bg-card/80 backdrop-blur">
@@ -140,22 +121,6 @@ export default function SignInPage() {
                   : "Create account"}
             </Button>
           </form>
-
-          <div className="relative text-center">
-            <span className="bg-card/80 px-2 text-xs text-muted-foreground">
-              or
-            </span>
-          </div>
-
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={handleGoogle}
-            disabled={pending}
-          >
-            Continue with Google
-          </Button>
 
           <p className="text-center text-sm text-muted-foreground">
             {mode === "sign-in" ? "No account yet?" : "Already have an account?"}{" "}
