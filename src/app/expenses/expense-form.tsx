@@ -9,10 +9,12 @@ import {
 import { attachDocument } from "@/app/actions/documents";
 import { CATEGORIES } from "@/lib/categories";
 import type { Extraction } from "@/lib/extraction";
+// Import from the DB-free core, NOT "@/lib/suggestions" — that module runs
+// neon(process.env.DATABASE_URL!) at load, which crashes in the browser bundle.
 import {
   matchExpenseTitle,
   type ExpenseSuggestions,
-} from "@/lib/suggestions";
+} from "@/lib/suggestions-core";
 import { DocumentScan } from "@/components/document-scan";
 import { Input } from "@/components/ui/input";
 import {

@@ -1,3 +1,4 @@
+import "server-only";
 import { and, desc, eq, isNotNull } from "drizzle-orm";
 import { db } from "@/db";
 import { expenses, services } from "@/db/schema";
