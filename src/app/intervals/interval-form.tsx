@@ -1,135 +1,207 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { createInterval } from "@/app/actions/intervals";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useState } from "react";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  createInterval,
+  updateInterval,
+  deleteInterval,
+} from "@/app/actions/intervals";
+import { Input } from "@/components/ui/input";
+import {
+  EntitySheet,
+  type EntityFormRenderProps,
+} from "@/components/entity-sheet";
+import { AddTrigger, Row } from "@/components/ui/data-list";
+import {
+  Field,
+  FormGrid,
+  FormSection,
+  FormSelect,
+} from "@/components/ui/form-field";
 
-const selectClass =
-  "h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+export interface IntervalRecord {
+  id: string;
+  name: string;
+  kind: string;
+  intervalMonths: number | null;
+  intervalHours: number | null;
+  lastDoneDate: string | null;
+  lastDoneHours: number | null;
+}
 
-export function IntervalForm() {
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
-  const [kind, setKind] = useState("calendar");
+function collect(form: HTMLFormElement) {
+  const fd = new FormData(form);
+  return {
+    name: String(fd.get("name") ?? ""),
+    kind: String(fd.get("kind") ?? "calendar"),
+    intervalMonths: String(fd.get("intervalMonths") ?? ""),
+    intervalHours: String(fd.get("intervalHours") ?? ""),
+    lastDoneDate: String(fd.get("lastDoneDate") ?? ""),
+    lastDoneHours: String(fd.get("lastDoneHours") ?? ""),
+  };
+}
 
+function IntervalFields({
+  readOnly,
+  idPrefix,
+  record,
+}: EntityFormRenderProps & { record?: IntervalRecord }) {
+  const [kind, setKind] = useState(record?.kind ?? "calendar");
   const needsMonths = kind === "calendar" || kind === "both";
   const needsHours = kind === "hours" || kind === "both";
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setError(null);
-    const fd = new FormData(e.currentTarget);
-    const form = e.currentTarget;
-    const input = {
-      name: String(fd.get("name") ?? ""),
-      kind: String(fd.get("kind") ?? "calendar"),
-      intervalMonths: String(fd.get("intervalMonths") ?? ""),
-      intervalHours: String(fd.get("intervalHours") ?? ""),
-      lastDoneDate: String(fd.get("lastDoneDate") ?? ""),
-      lastDoneHours: String(fd.get("lastDoneHours") ?? ""),
-    };
-    startTransition(async () => {
-      try {
-        await createInterval(input);
-        form.reset();
-        setKind("calendar");
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to add interval");
-      }
-    });
-  }
-
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Define an interval</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2">
-          <div className="grid gap-1.5 sm:col-span-2">
-            <Label htmlFor="iv-name">Name</Label>
-            <Input
-              id="iv-name"
-              name="name"
-              required
-              placeholder="e.g. Annual inspection, Oil change"
-            />
-          </div>
-          <div className="grid gap-1.5">
-            <Label htmlFor="iv-kind">Kind</Label>
-            <select
-              id="iv-kind"
-              name="kind"
-              className={selectClass}
-              value={kind}
-              onChange={(e) => setKind(e.target.value)}
-            >
-              <option value="calendar">Calendar (months)</option>
-              <option value="hours">Engine hours</option>
-              <option value="both">Both</option>
-            </select>
-          </div>
-          <div className="hidden sm:block" aria-hidden />
+    <>
+      <FormSection title="Interval">
+        <Field id={`${idPrefix}-name`} label="Name" required span>
+          <Input
+            id={`${idPrefix}-name`}
+            name="name"
+            required
+            disabled={readOnly}
+            defaultValue={record?.name ?? ""}
+            placeholder="e.g. Annual inspection, Oil change"
+          />
+        </Field>
+        <Field
+          id={`${idPrefix}-kind`}
+          label="Tracked by"
+          help="Calendar time, engine hours, or whichever comes first."
+        >
+          <FormSelect
+            id={`${idPrefix}-kind`}
+            name="kind"
+            disabled={readOnly}
+            value={kind}
+            onChange={(e) => setKind(e.target.value)}
+          >
+            <option value="calendar">Calendar (months)</option>
+            <option value="hours">Engine hours</option>
+            <option value="both">Both</option>
+          </FormSelect>
+        </Field>
+      </FormSection>
+
+      <FormSection title="Cadence">
+        <FormGrid>
           {needsMonths && (
-            <div className="grid gap-1.5">
-              <Label htmlFor="iv-months">Interval (months)</Label>
+            <Field id={`${idPrefix}-months`} label="Every (months)">
               <Input
-                id="iv-months"
+                id={`${idPrefix}-months`}
                 name="intervalMonths"
                 type="number"
+                inputMode="numeric"
                 step="1"
                 min="1"
+                disabled={readOnly}
+                defaultValue={record?.intervalMonths ?? ""}
                 placeholder="e.g. 12"
+                className="font-mono"
               />
-            </div>
+            </Field>
           )}
           {needsHours && (
-            <div className="grid gap-1.5">
-              <Label htmlFor="iv-hours">Interval (hours)</Label>
+            <Field id={`${idPrefix}-hours`} label="Every (hours)">
               <Input
-                id="iv-hours"
+                id={`${idPrefix}-hours`}
                 name="intervalHours"
                 type="number"
+                inputMode="decimal"
                 step="0.1"
                 min="0"
+                disabled={readOnly}
+                defaultValue={record?.intervalHours ?? ""}
                 placeholder="e.g. 50"
+                className="font-mono"
               />
-            </div>
+            </Field>
           )}
+        </FormGrid>
+      </FormSection>
+
+      <FormSection title="Last completed">
+        <FormGrid>
           {needsMonths && (
-            <div className="grid gap-1.5">
-              <Label htmlFor="iv-lastdate">Last done (date)</Label>
-              <Input id="iv-lastdate" name="lastDoneDate" type="date" />
-            </div>
+            <Field id={`${idPrefix}-lastdate`} label="Date">
+              <Input
+                id={`${idPrefix}-lastdate`}
+                name="lastDoneDate"
+                type="date"
+                disabled={readOnly}
+                defaultValue={record?.lastDoneDate ?? ""}
+              />
+            </Field>
           )}
           {needsHours && (
-            <div className="grid gap-1.5">
-              <Label htmlFor="iv-lasthours">Last done (tach hours)</Label>
+            <Field id={`${idPrefix}-lasthours`} label="Tach hours">
               <Input
-                id="iv-lasthours"
+                id={`${idPrefix}-lasthours`}
                 name="lastDoneHours"
                 type="number"
+                inputMode="decimal"
                 step="0.1"
+                disabled={readOnly}
+                defaultValue={record?.lastDoneHours ?? ""}
                 placeholder="optional"
+                className="font-mono"
               />
-            </div>
+            </Field>
           )}
-          <div className="flex items-center gap-3 sm:col-span-2">
-            <Button type="submit" disabled={pending}>
-              {pending ? "Saving…" : "Add interval"}
-            </Button>
-            {error && <span className="text-sm text-destructive">{error}</span>}
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+        </FormGrid>
+      </FormSection>
+    </>
+  );
+}
+
+/** "+ Add interval" — create sheet. */
+export function AddIntervalSheet({ readOnly }: { readOnly: boolean }) {
+  return (
+    <EntitySheet
+      kicker="Interval"
+      isEdit={false}
+      readOnly={readOnly}
+      saveLabel="Add interval"
+      trigger={<AddTrigger label="Add interval" />}
+      onSubmit={async (form) => {
+        await createInterval(collect(form));
+      }}
+    >
+      {(rp) => <IntervalFields {...rp} />}
+    </EntitySheet>
+  );
+}
+
+/** Tappable row -> edit (or read-only) sheet. */
+export function IntervalRow({
+  record,
+  readOnly,
+  meta,
+  children,
+}: {
+  record: IntervalRecord;
+  readOnly: boolean;
+  meta?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <EntitySheet
+      kicker="Interval"
+      isEdit
+      readOnly={readOnly}
+      saveLabel="Save changes"
+      trigger={
+        <Row readOnly={readOnly} meta={meta}>
+          {children}
+        </Row>
+      }
+      onSubmit={async (form) => {
+        await updateInterval(record.id, collect(form));
+      }}
+      onDelete={async () => {
+        await deleteInterval(record.id);
+      }}
+    >
+      {(rp) => <IntervalFields {...rp} record={record} />}
+    </EntitySheet>
   );
 }

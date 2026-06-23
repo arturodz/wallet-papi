@@ -7,16 +7,12 @@ import { NoAircraft } from "@/components/no-aircraft";
 import { canWrite, type Role } from "@/lib/auth/roles";
 import { computeIntervalStatus, severityRank } from "@/lib/intervals";
 import { StatusBadge } from "@/components/status-badge";
-import { IntervalForm } from "./interval-form";
-import { DeleteIntervalButton } from "./delete-interval-button";
+import { ListHeader, EmptyState } from "@/components/ui/data-list";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  AddIntervalSheet,
+  IntervalRow,
+  type IntervalRecord,
+} from "./interval-form";
 
 export const dynamic = "force-dynamic";
 
@@ -53,59 +49,66 @@ export default async function IntervalsPage() {
 
   return (
     <main className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
-      <h1 className="font-mono text-2xl">Service Intervals</h1>
-
-      {writable && <IntervalForm />}
+      <ListHeader title="Service Intervals">
+        {writable && <AddIntervalSheet readOnly={false} />}
+      </ListHeader>
 
       {computed.length === 0 ? (
-        <p className="text-muted-foreground">Pre-flight: no intervals defined.</p>
+        <EmptyState>
+          Pre-flight: no intervals defined
+          {writable ? " — tap + to add one." : "."}
+        </EmptyState>
       ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Kind</TableHead>
-              <TableHead>Due</TableHead>
-              <TableHead className="text-right font-mono">Remaining</TableHead>
-              <TableHead>Status</TableHead>
-              {writable && <TableHead className="text-right">Actions</TableHead>}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {computed.map(({ row, result }) => {
-              const dueParts: string[] = [];
-              if (result.dueDate) dueParts.push(result.dueDate);
-              if (result.dueHours != null) dueParts.push(`${result.dueHours} hrs`);
+        <ul className="space-y-2">
+          {computed.map(({ row, result }) => {
+            const record: IntervalRecord = {
+              id: row.id,
+              name: row.name,
+              kind: row.kind,
+              intervalMonths: row.intervalMonths,
+              intervalHours: row.intervalHours,
+              lastDoneDate: row.lastDoneDate,
+              lastDoneHours: row.lastDoneHours,
+            };
 
-              const remainParts: string[] = [];
-              if (result.daysUntilDue != null) remainParts.push(`${result.daysUntilDue}d`);
-              if (result.hoursUntilDue != null) remainParts.push(`${result.hoursUntilDue}h`);
+            const dueParts: string[] = [];
+            if (result.dueDate) dueParts.push(result.dueDate);
+            if (result.dueHours != null) dueParts.push(`${result.dueHours} hrs`);
 
-              return (
-                <TableRow key={row.id}>
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell className="font-mono text-xs">
-                    {KIND_LABEL[row.kind] ?? row.kind}
-                  </TableCell>
-                  <TableCell className="font-mono text-xs">
-                    {dueParts.length ? dueParts.join(" · ") : "—"}
-                  </TableCell>
-                  <TableCell className="text-right font-mono text-xs">
-                    {remainParts.length ? remainParts.join(" · ") : "—"}
-                  </TableCell>
-                  <TableCell>
-                    <StatusBadge status={result.status} />
-                  </TableCell>
-                  {writable && (
-                    <TableCell className="text-right">
-                      <DeleteIntervalButton id={row.id} />
-                    </TableCell>
-                  )}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+            const remainParts: string[] = [];
+            if (result.daysUntilDue != null) remainParts.push(`${result.daysUntilDue}d`);
+            if (result.hoursUntilDue != null) remainParts.push(`${result.hoursUntilDue}h`);
+
+            return (
+              <li key={row.id}>
+                <IntervalRow
+                  record={record}
+                  readOnly={!writable}
+                  meta={<StatusBadge status={result.status} />}
+                >
+                  <div className="flex items-baseline gap-2">
+                    <span className="truncate text-sm font-medium">
+                      {row.name}
+                    </span>
+                    <span className="font-mono text-[10px] uppercase tracking-wide text-muted-foreground">
+                      {KIND_LABEL[row.kind] ?? row.kind}
+                    </span>
+                  </div>
+                  <div className="mt-0.5 flex gap-3 font-mono text-xs text-muted-foreground tabular-nums">
+                    {dueParts.length > 0 && (
+                      <span>due {dueParts.join(" · ")}</span>
+                    )}
+                    {remainParts.length > 0 && (
+                      <span className="text-muted-foreground/70">
+                        {remainParts.join(" · ")} left
+                      </span>
+                    )}
+                  </div>
+                </IntervalRow>
+              </li>
+            );
+          })}
+        </ul>
       )}
     </main>
   );
