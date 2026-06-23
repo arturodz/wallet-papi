@@ -32,6 +32,7 @@ export const profiles = pgTable("profiles", {
 
 export const equipment = pgTable("equipment", {
   id: uuid("id").primaryKey().defaultRandom(),
+  aircraftId: uuid("aircraft_id").notNull().references(() => aircraft.id),
   name: text("name").notNull(),
   category: text("category"),
   make: text("make"),
@@ -44,6 +45,7 @@ export const equipment = pgTable("equipment", {
 
 export const intervals = pgTable("intervals", {
   id: uuid("id").primaryKey().defaultRandom(),
+  aircraftId: uuid("aircraft_id").notNull().references(() => aircraft.id),
   name: text("name").notNull(),
   kind: intervalKindEnum("kind").notNull(),
   intervalMonths: integer("interval_months"),
@@ -55,6 +57,7 @@ export const intervals = pgTable("intervals", {
 
 export const services = pgTable("services", {
   id: uuid("id").primaryKey().defaultRandom(),
+  aircraftId: uuid("aircraft_id").notNull().references(() => aircraft.id),
   date: date("date").notNull(),
   tachAtService: real("tach_at_service"),
   description: text("description").notNull(),
@@ -66,6 +69,7 @@ export const services = pgTable("services", {
 
 export const expenses = pgTable("expenses", {
   id: uuid("id").primaryKey().defaultRandom(),
+  aircraftId: uuid("aircraft_id").notNull().references(() => aircraft.id),
   date: date("date").notNull(),
   payee: text("payee"),
   amount: numeric("amount", { precision: 12, scale: 2 }).notNull(),
@@ -76,6 +80,7 @@ export const expenses = pgTable("expenses", {
 
 export const squawks = pgTable("squawks", {
   id: uuid("id").primaryKey().defaultRandom(),
+  aircraftId: uuid("aircraft_id").notNull().references(() => aircraft.id),
   title: text("title").notNull(),
   description: text("description"),
   severity: text("severity"),
