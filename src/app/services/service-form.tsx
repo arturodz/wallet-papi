@@ -1,123 +1,210 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { createService } from "@/app/actions/services";
+import { createService, updateService, deleteService } from "@/app/actions/services";
 import { CATEGORIES } from "@/lib/categories";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  EntitySheet,
+  type EntityFormRenderProps,
+} from "@/components/entity-sheet";
+import { AddTrigger, Row } from "@/components/ui/data-list";
+import {
+  Field,
+  FormGrid,
+  FormSection,
+  FormSelect,
+} from "@/components/ui/form-field";
 
-const selectClass =
-  "h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+export interface ServiceRecord {
+  id: string;
+  date: string;
+  description: string;
+  vendor: string | null;
+  category: string | null;
+  tachAtService: number | null;
+}
 
-export function ServiceForm({
+function collect(form: HTMLFormElement) {
+  const fd = new FormData(form);
+  return {
+    date: String(fd.get("date") ?? ""),
+    description: String(fd.get("description") ?? ""),
+    vendor: String(fd.get("vendor") ?? ""),
+    category: String(fd.get("category") ?? ""),
+    tachAtService: String(fd.get("tachAtService") ?? ""),
+    satisfiesIntervalId: String(fd.get("satisfiesIntervalId") ?? ""),
+  };
+}
+
+function Fields({
+  readOnly,
+  idPrefix,
+  record,
   intervals,
-}: {
+}: EntityFormRenderProps & {
+  record?: ServiceRecord;
   intervals: { id: string; name: string }[];
 }) {
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
-
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setError(null);
-    const fd = new FormData(e.currentTarget);
-    const form = e.currentTarget;
-    const input = {
-      date: String(fd.get("date") ?? ""),
-      description: String(fd.get("description") ?? ""),
-      vendor: String(fd.get("vendor") ?? ""),
-      category: String(fd.get("category") ?? ""),
-      tachAtService: String(fd.get("tachAtService") ?? ""),
-      satisfiesIntervalId: String(fd.get("satisfiesIntervalId") ?? ""),
-    };
-    startTransition(async () => {
-      try {
-        await createService(input);
-        form.reset();
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to log service");
-      }
-    });
-  }
-
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Log a service</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2">
-          <div className="grid gap-1.5">
-            <Label htmlFor="svc-date">Date</Label>
-            <Input id="svc-date" name="date" type="date" required />
-          </div>
-          <div className="grid gap-1.5">
-            <Label htmlFor="svc-tach">Tach at service</Label>
+    <>
+      <FormSection title="Service">
+        <Field
+          id={`${idPrefix}-desc`}
+          label="Description"
+          required
+          span
+        >
+          <Input
+            id={`${idPrefix}-desc`}
+            name="description"
+            required
+            disabled={readOnly}
+            defaultValue={record?.description ?? ""}
+            placeholder="e.g. oil change, annual inspection"
+          />
+        </Field>
+        <FormGrid>
+          <Field id={`${idPrefix}-date`} label="Date" required>
             <Input
-              id="svc-tach"
+              id={`${idPrefix}-date`}
+              name="date"
+              type="date"
+              required
+              disabled={readOnly}
+              defaultValue={record?.date ?? ""}
+            />
+          </Field>
+          <Field
+            id={`${idPrefix}-tach`}
+            label="Tach at service"
+            help="Engine hours on the meter."
+          >
+            <Input
+              id={`${idPrefix}-tach`}
               name="tachAtService"
+              inputMode="decimal"
               type="number"
               step="0.1"
+              disabled={readOnly}
+              defaultValue={record?.tachAtService ?? ""}
+              placeholder="optional"
+              className="font-mono"
+            />
+          </Field>
+        </FormGrid>
+      </FormSection>
+
+      <FormSection title="Attribution">
+        <FormGrid>
+          <Field id={`${idPrefix}-vendor`} label="Vendor">
+            <Input
+              id={`${idPrefix}-vendor`}
+              name="vendor"
+              disabled={readOnly}
+              defaultValue={record?.vendor ?? ""}
               placeholder="optional"
             />
-          </div>
-          <div className="grid gap-1.5 sm:col-span-2">
-            <Label htmlFor="svc-desc">Description</Label>
-            <Input
-              id="svc-desc"
-              name="description"
-              required
-              placeholder="e.g. oil change, annual inspection"
-            />
-          </div>
-          <div className="grid gap-1.5">
-            <Label htmlFor="svc-vendor">Vendor</Label>
-            <Input id="svc-vendor" name="vendor" placeholder="optional" />
-          </div>
-          <div className="grid gap-1.5">
-            <Label htmlFor="svc-cat">Category</Label>
-            <select id="svc-cat" name="category" className={selectClass} defaultValue="">
+          </Field>
+          <Field id={`${idPrefix}-cat`} label="Category">
+            <FormSelect
+              id={`${idPrefix}-cat`}
+              name="category"
+              disabled={readOnly}
+              defaultValue={record?.category ?? ""}
+            >
               <option value="">—</option>
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>
                   {c}
                 </option>
               ))}
-            </select>
-          </div>
-          {intervals.length > 0 && (
-            <div className="grid gap-1.5 sm:col-span-2">
-              <Label htmlFor="svc-interval">Marks interval complete</Label>
-              <select
-                id="svc-interval"
-                name="satisfiesIntervalId"
-                className={selectClass}
-                defaultValue=""
-              >
-                <option value="">— none —</option>
-                {intervals.map((i) => (
-                  <option key={i.id} value={i.id}>
-                    {i.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-          <div className="flex items-center gap-3 sm:col-span-2">
-            <Button type="submit" disabled={pending}>
-              {pending ? "Logging…" : "Log service"}
-            </Button>
-            {error && <span className="text-sm text-destructive">{error}</span>}
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+            </FormSelect>
+          </Field>
+        </FormGrid>
+        {intervals.length > 0 && (
+          <Field
+            id={`${idPrefix}-interval`}
+            label="Marks interval complete"
+            help="Resets the chosen recurring interval to this service."
+            span
+          >
+            <FormSelect
+              id={`${idPrefix}-interval`}
+              name="satisfiesIntervalId"
+              disabled={readOnly}
+              defaultValue=""
+            >
+              <option value="">— none —</option>
+              {intervals.map((i) => (
+                <option key={i.id} value={i.id}>
+                  {i.name}
+                </option>
+              ))}
+            </FormSelect>
+          </Field>
+        )}
+      </FormSection>
+    </>
+  );
+}
+
+/** "+ Add service" trigger + create sheet. */
+export function AddServiceSheet({
+  intervals,
+  readOnly,
+}: {
+  intervals: { id: string; name: string }[];
+  readOnly: boolean;
+}) {
+  return (
+    <EntitySheet
+      kicker="Service"
+      isEdit={false}
+      readOnly={readOnly}
+      saveLabel="Log service"
+      trigger={<AddTrigger label="Add service" />}
+      onSubmit={async (form) => {
+        await createService(collect(form));
+      }}
+    >
+      {(rp) => <Fields {...rp} intervals={intervals} />}
+    </EntitySheet>
+  );
+}
+
+/** Tappable row -> edit (or read-only) sheet. */
+export function ServiceRow({
+  record,
+  intervals,
+  readOnly,
+  meta,
+  children,
+}: {
+  record: ServiceRecord;
+  intervals: { id: string; name: string }[];
+  readOnly: boolean;
+  meta?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <EntitySheet
+      kicker="Service"
+      isEdit
+      readOnly={readOnly}
+      saveLabel="Save changes"
+      trigger={
+        <Row readOnly={readOnly} meta={meta}>
+          {children}
+        </Row>
+      }
+      onSubmit={async (form) => {
+        await updateService(record.id, collect(form));
+      }}
+      onDelete={async () => {
+        await deleteService(record.id);
+      }}
+    >
+      {(rp) => <Fields {...rp} record={record} intervals={intervals} />}
+    </EntitySheet>
   );
 }
