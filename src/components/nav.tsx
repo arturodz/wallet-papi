@@ -14,6 +14,10 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  AircraftSwitcher,
+  type AircraftOption,
+} from "@/components/aircraft-switcher";
 
 type NavLink = { href: string; label: string; icon: LucideIcon };
 
@@ -33,7 +37,13 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function Nav() {
+export function Nav({
+  aircraft = [],
+  activeId = null,
+}: {
+  aircraft?: AircraftOption[];
+  activeId?: string | null;
+}) {
   const pathname = usePathname() ?? "/";
 
   return (
@@ -50,6 +60,9 @@ export function Nav() {
           <span className="font-mono text-sm font-semibold tracking-tight">
             WALLET&nbsp;PAPI
           </span>
+        </div>
+        <div className="px-3 pb-2">
+          <AircraftSwitcher aircraft={aircraft} activeId={activeId} />
         </div>
         <nav className="flex flex-1 flex-col gap-1 px-3 py-2">
           {links.map((l) => {
@@ -75,8 +88,8 @@ export function Nav() {
         </nav>
       </aside>
 
-      {/* Phone: top brand bar (md hidden) */}
-      <header className="sticky top-0 z-40 flex items-center gap-2 border-b border-border bg-card/80 px-4 py-3 backdrop-blur md:hidden">
+      {/* Phone: top brand bar + plane switcher (md hidden) */}
+      <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-border bg-card/80 px-4 py-3 backdrop-blur md:hidden">
         <span className="flex items-center gap-1" aria-hidden>
           <span className="size-2 rounded-full bg-slate-100" />
           <span className="size-2 rounded-full bg-slate-100" />
@@ -86,6 +99,9 @@ export function Nav() {
         <span className="font-mono text-sm font-semibold tracking-tight">
           WALLET&nbsp;PAPI
         </span>
+        <div className="ml-auto w-32">
+          <AircraftSwitcher aircraft={aircraft} activeId={activeId} />
+        </div>
       </header>
 
       {/* Phone: fixed bottom tab bar (md hidden), safe-area inset */}

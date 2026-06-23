@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AppChrome } from "@/components/app-chrome";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
+import { getActiveAircraftId, listAircraft } from "@/lib/aircraft";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,11 +42,21 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Feed the client nav switcher from the server (cookie-backed active plane).
+  const [fleet, activeId] = await Promise.all([
+    listAircraft(),
+    getActiveAircraftId(),
+  ]);
+  const aircraftOptions = fleet.map((p) => ({
+    id: p.id,
+    tailNumber: p.tailNumber,
+  }));
+
   return (
     <html
       lang="en"
@@ -53,7 +64,9 @@ export default function RootLayout({
     >
       <body className="min-h-full bg-background text-foreground">
         <ServiceWorkerRegister />
-        <AppChrome>{children}</AppChrome>
+        <AppChrome aircraft={aircraftOptions} activeId={activeId}>
+          {children}
+        </AppChrome>
       </body>
     </html>
   );
