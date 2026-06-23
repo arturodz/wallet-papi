@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 /**
  * Shared form-layout kit for the entity sheets, so every form reads the same:
@@ -95,6 +96,34 @@ export const FormSelect = React.forwardRef<
     />
   );
 });
+
+/**
+ * A free-text input wired to a native <datalist> of suggestions. The user can
+ * always type a brand-new value (datalist only suggests, never constrains), so
+ * new titles/payees/vendors flow through untouched — this never traps the user.
+ *
+ * Pass `options` (the suggestion strings) and an `id`; the matching <datalist>
+ * is rendered and linked via the `list` attribute. Everything else (name,
+ * value/onChange, defaultValue, disabled, placeholder…) forwards to the Input.
+ */
+export function DatalistInput({
+  id,
+  options,
+  className,
+  ...props
+}: { options: readonly string[] } & React.ComponentProps<"input">) {
+  const listId = `${id}-list`;
+  return (
+    <>
+      <Input id={id} list={listId} className={className} {...props} />
+      <datalist id={listId}>
+        {options.map((opt) => (
+          <option key={opt} value={opt} />
+        ))}
+      </datalist>
+    </>
+  );
+}
 
 /** Inline server-error line (annunciator red). */
 export function FormError({ message }: { message: string | null }) {
