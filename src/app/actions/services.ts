@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { services, intervals } from "@/db/schema";
 import { requireRole } from "@/lib/auth/guard";
+import { getActiveAircraftId } from "@/lib/aircraft";
 import { serviceInput } from "@/lib/validation";
 
 function bumpInterval(intervalId: string, date: string, tach: number | undefined) {
@@ -16,8 +17,13 @@ function bumpInterval(intervalId: string, date: string, tach: number | undefined
 
 export async function createService(input: unknown) {
   await requireRole("editor");
+  const aircraftId = await getActiveAircraftId();
+  if (!aircraftId) throw new Error("NO_ACTIVE_AIRCRAFT");
   const data = serviceInput.parse(input);
-  const [row] = await db.insert(services).values(data).returning();
+  const [row] = await db
+    .insert(services)
+    .values({ ...data, aircraftId })
+    .returning();
   if (data.satisfiesIntervalId) {
     await bumpInterval(data.satisfiesIntervalId, data.date, data.tachAtService);
   }

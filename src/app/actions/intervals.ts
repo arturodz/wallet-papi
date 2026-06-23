@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { intervals } from "@/db/schema";
 import { requireRole } from "@/lib/auth/guard";
+import { getActiveAircraftId } from "@/lib/aircraft";
 import { intervalInput, type IntervalInput } from "@/lib/validation";
 
 // Map validated input (undefined for empty fields) onto the nullable columns.
@@ -22,8 +23,13 @@ function toValues(data: IntervalInput) {
 
 export async function createInterval(input: unknown) {
   await requireRole("editor");
+  const aircraftId = await getActiveAircraftId();
+  if (!aircraftId) throw new Error("NO_ACTIVE_AIRCRAFT");
   const data = intervalInput.parse(input);
-  const [row] = await db.insert(intervals).values(toValues(data)).returning();
+  const [row] = await db
+    .insert(intervals)
+    .values({ ...toValues(data), aircraftId })
+    .returning();
   revalidatePath("/intervals");
   revalidatePath("/");
   return row;

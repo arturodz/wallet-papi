@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { squawks } from "@/db/schema";
 import { requireRole } from "@/lib/auth/guard";
+import { getActiveAircraftId } from "@/lib/aircraft";
 import { squawkInput, type SquawkInput } from "@/lib/validation";
 import { resolveTransition, type SquawkStatus } from "@/lib/squawks";
 
@@ -29,8 +30,13 @@ function today() {
 
 export async function createSquawk(input: unknown) {
   await requireRole("editor");
+  const aircraftId = await getActiveAircraftId();
+  if (!aircraftId) throw new Error("NO_ACTIVE_AIRCRAFT");
   const data = squawkInput.parse(input);
-  const [row] = await db.insert(squawks).values(toValues(data)).returning();
+  const [row] = await db
+    .insert(squawks)
+    .values({ ...toValues(data), aircraftId })
+    .returning();
   revalidatePath("/squawks");
   revalidatePath("/");
   return row;

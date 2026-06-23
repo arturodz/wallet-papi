@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { equipment, intervals, squawks, services } from "@/db/schema";
 import { requireRole } from "@/lib/auth/guard";
+import { getActiveAircraftId } from "@/lib/aircraft";
 import { equipmentInput, type EquipmentInput } from "@/lib/validation";
 
 // Map validated input (undefined for empty fields) onto the nullable columns.
@@ -23,8 +24,13 @@ function toValues(data: EquipmentInput) {
 
 export async function createEquipment(input: unknown) {
   await requireRole("editor");
+  const aircraftId = await getActiveAircraftId();
+  if (!aircraftId) throw new Error("NO_ACTIVE_AIRCRAFT");
   const data = equipmentInput.parse(input);
-  const [row] = await db.insert(equipment).values(toValues(data)).returning();
+  const [row] = await db
+    .insert(equipment)
+    .values({ ...toValues(data), aircraftId })
+    .returning();
   revalidatePath("/equipment");
   revalidatePath("/");
   return row;

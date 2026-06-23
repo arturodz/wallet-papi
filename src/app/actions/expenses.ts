@@ -5,12 +5,18 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { expenses } from "@/db/schema";
 import { requireRole } from "@/lib/auth/guard";
+import { getActiveAircraftId } from "@/lib/aircraft";
 import { expenseInput } from "@/lib/validation";
 
 export async function createExpense(input: unknown) {
   await requireRole("editor");
+  const aircraftId = await getActiveAircraftId();
+  if (!aircraftId) throw new Error("NO_ACTIVE_AIRCRAFT");
   const data = expenseInput.parse(input);
-  const [row] = await db.insert(expenses).values(data).returning();
+  const [row] = await db
+    .insert(expenses)
+    .values({ ...data, aircraftId })
+    .returning();
   revalidatePath("/expenses");
   revalidatePath("/tco");
   revalidatePath("/");
