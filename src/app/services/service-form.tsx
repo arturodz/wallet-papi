@@ -9,6 +9,7 @@ import {
 } from "@/components/entity-sheet";
 import { AddTrigger, Row } from "@/components/ui/data-list";
 import {
+  DatalistInput,
   Field,
   FormGrid,
   FormSection,
@@ -41,9 +42,11 @@ function Fields({
   idPrefix,
   record,
   intervals,
+  vendors,
 }: EntityFormRenderProps & {
   record?: ServiceRecord;
   intervals: { id: string; name: string }[];
+  vendors: string[];
 }) {
   return (
     <>
@@ -97,9 +100,10 @@ function Fields({
       <FormSection title="Attribution">
         <FormGrid>
           <Field id={`${idPrefix}-vendor`} label="Vendor">
-            <Input
+            <DatalistInput
               id={`${idPrefix}-vendor`}
               name="vendor"
+              options={vendors}
               disabled={readOnly}
               defaultValue={record?.vendor ?? ""}
               placeholder="optional"
@@ -151,9 +155,11 @@ function Fields({
 /** "+ Add service" trigger + create sheet. */
 export function AddServiceSheet({
   intervals,
+  vendors,
   readOnly,
 }: {
   intervals: { id: string; name: string }[];
+  vendors: string[];
   readOnly: boolean;
 }) {
   return (
@@ -167,7 +173,7 @@ export function AddServiceSheet({
         await createService(collect(form));
       }}
     >
-      {(rp) => <Fields {...rp} intervals={intervals} />}
+      {(rp) => <Fields {...rp} intervals={intervals} vendors={vendors} />}
     </EntitySheet>
   );
 }
@@ -176,12 +182,14 @@ export function AddServiceSheet({
 export function ServiceRow({
   record,
   intervals,
+  vendors,
   readOnly,
   meta,
   children,
 }: {
   record: ServiceRecord;
   intervals: { id: string; name: string }[];
+  vendors: string[];
   readOnly: boolean;
   meta?: React.ReactNode;
   children: React.ReactNode;
@@ -204,7 +212,9 @@ export function ServiceRow({
         await deleteService(record.id);
       }}
     >
-      {(rp) => <Fields {...rp} record={record} intervals={intervals} />}
+      {(rp) => (
+        <Fields {...rp} record={record} intervals={intervals} vendors={vendors} />
+      )}
     </EntitySheet>
   );
 }

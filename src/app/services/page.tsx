@@ -5,6 +5,7 @@ import { getCurrentProfile } from "@/lib/auth/guard";
 import { getActiveAircraftId } from "@/lib/aircraft";
 import { NoAircraft } from "@/components/no-aircraft";
 import { canWrite, type Role } from "@/lib/auth/roles";
+import { getVendorSuggestions } from "@/lib/suggestions";
 import { ListHeader, EmptyState } from "@/components/ui/data-list";
 import {
   AddServiceSheet,
@@ -38,12 +39,17 @@ export default async function ServicesPage() {
     .from(intervals)
     .where(eq(intervals.aircraftId, activeId))
     .orderBy(asc(intervals.name));
+  const vendors = await getVendorSuggestions(activeId);
 
   return (
     <main className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
       <ListHeader title="Maintenance Log">
         {writable && (
-          <AddServiceSheet intervals={intervalOptions} readOnly={false} />
+          <AddServiceSheet
+            intervals={intervalOptions}
+            vendors={vendors}
+            readOnly={false}
+          />
         )}
       </ListHeader>
 
@@ -69,6 +75,7 @@ export default async function ServicesPage() {
                 <ServiceRow
                   record={record}
                   intervals={intervalOptions}
+                  vendors={vendors}
                   readOnly={!writable}
                   meta={
                     s.tachAtService != null ? (
