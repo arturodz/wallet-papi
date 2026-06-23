@@ -7,6 +7,7 @@ import { NoAircraft } from "@/components/no-aircraft";
 import { canWrite, type Role } from "@/lib/auth/roles";
 import { toCents, formatUSD } from "@/lib/money";
 import { aiEnabled, blobEnabled } from "@/lib/env";
+import { getExpenseSuggestions } from "@/lib/suggestions";
 import { ListHeader, EmptyState } from "@/components/ui/data-list";
 import {
   AddExpenseSheet,
@@ -43,6 +44,7 @@ export default async function ExpensesPage() {
   const serviceLabel = new Map(
     serviceRows.map((s) => [s.id, `${s.date} · ${s.description}`]),
   );
+  const suggestions = await getExpenseSuggestions(activeId);
 
   return (
     <main className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
@@ -50,6 +52,7 @@ export default async function ExpensesPage() {
         {writable && (
           <AddExpenseSheet
             services={serviceRows}
+            suggestions={suggestions}
             aiEnabled={aiEnabled()}
             blobEnabled={blobEnabled()}
             readOnly={false}
@@ -68,13 +71,18 @@ export default async function ExpensesPage() {
             const record: ExpenseRecord = {
               id: x.id,
               date: x.date,
+              title: x.title,
               payee: x.payee,
               amount: x.amount,
               category: x.category,
               notes: x.notes,
               serviceId: x.serviceId,
             };
+            // Primary label: Title, falling back to payee then notes.
+            const primary = x.title ?? x.payee ?? x.notes ?? "—";
+            // When Title is the headline, surface the payee in the sub-line too.
             const sub = [
+              x.title ? x.payee : null,
               x.category,
               x.serviceId ? serviceLabel.get(x.serviceId) : null,
             ]
@@ -85,6 +93,7 @@ export default async function ExpensesPage() {
                 <ExpenseRow
                   record={record}
                   services={serviceRows}
+                  suggestions={suggestions}
                   readOnly={!writable}
                   meta={
                     <span className="font-mono text-sm tabular-nums">
@@ -97,7 +106,7 @@ export default async function ExpensesPage() {
                       {x.date}
                     </span>
                     <span className="truncate text-sm font-medium">
-                      {x.payee ?? "—"}
+                      {primary}
                     </span>
                   </div>
                   {sub && (

@@ -9,6 +9,10 @@ import {
 import { attachDocument } from "@/app/actions/documents";
 import { CATEGORIES } from "@/lib/categories";
 import type { Extraction } from "@/lib/extraction";
+import {
+  matchExpenseTitle,
+  type ExpenseSuggestions,
+} from "@/lib/suggestions";
 import { DocumentScan } from "@/components/document-scan";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,6 +21,7 @@ import {
 } from "@/components/entity-sheet";
 import { AddTrigger, Row } from "@/components/ui/data-list";
 import {
+  DatalistInput,
   Field,
   FormGrid,
   FormSection,
@@ -32,6 +37,7 @@ export interface ServiceOption {
 export interface ExpenseRecord {
   id: string;
   date: string;
+  title: string | null;
   payee: string | null;
   amount: string;
   category: string | null;
@@ -39,44 +45,84 @@ export interface ExpenseRecord {
   serviceId: string | null;
 }
 
+/**
+ * Title/payee/category/amount are controlled in BOTH modes so that:
+ *  - the document scan can prefill them (create mode), and
+ *  - typing a known Title can prefill payee/category/amount (fast re-entry).
+ * Date/notes stay controlled in create mode (scan) and uncontrolled in edit.
+ */
 function ExpenseFields({
   readOnly,
   idPrefix,
   record,
   services,
-  controlled,
+  suggestions,
+  fast,
+  controlledExtras,
 }: EntityFormRenderProps & {
   record?: ExpenseRecord;
   services: ServiceOption[];
-  /** Controlled values (create mode, so the scan can prefill). */
-  controlled?: {
-    date: string;
-    setDate: (v: string) => void;
+  suggestions: ExpenseSuggestions;
+  /** Controlled fast-re-entry fields + title-match prefill (always present). */
+  fast: {
+    title: string;
+    setTitle: (v: string) => void;
     payee: string;
     setPayee: (v: string) => void;
     amount: string;
     setAmount: (v: string) => void;
+    category: string;
+    setCategory: (v: string) => void;
+  };
+  /** Date/notes: controlled in create mode (scan), uncontrolled in edit. */
+  controlledExtras?: {
+    date: string;
+    setDate: (v: string) => void;
     notes: string;
     setNotes: (v: string) => void;
   };
 }) {
-  // Edit/read-only mode uses defaultValue; create mode is controlled for scan.
-  const dateProps = controlled
-    ? { value: controlled.date, onChange: (e: React.ChangeEvent<HTMLInputElement>) => controlled.setDate(e.target.value) }
+  const dateProps = controlledExtras
+    ? {
+        value: controlledExtras.date,
+        onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+          controlledExtras.setDate(e.target.value),
+      }
     : { defaultValue: record?.date ?? "" };
-  const payeeProps = controlled
-    ? { value: controlled.payee, onChange: (e: React.ChangeEvent<HTMLInputElement>) => controlled.setPayee(e.target.value) }
-    : { defaultValue: record?.payee ?? "" };
-  const amountProps = controlled
-    ? { value: controlled.amount, onChange: (e: React.ChangeEvent<HTMLInputElement>) => controlled.setAmount(e.target.value) }
-    : { defaultValue: record?.amount ?? "" };
-  const notesProps = controlled
-    ? { value: controlled.notes, onChange: (e: React.ChangeEvent<HTMLInputElement>) => controlled.setNotes(e.target.value) }
+  const notesProps = controlledExtras
+    ? {
+        value: controlledExtras.notes,
+        onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+          controlledExtras.setNotes(e.target.value),
+      }
     : { defaultValue: record?.notes ?? "" };
+
+  function onTitleChange(value: string) {
+    fast.setTitle(value);
+    // Prefill only assists on a match; unknown titles change nothing — the user
+    // is never trapped and a brand-new title flows through untouched.
+    const match = matchExpenseTitle(value, suggestions.expenseTitles);
+    if (match) {
+      fast.setPayee(match.payee ?? "");
+      fast.setCategory(match.category ?? "");
+      fast.setAmount(match.amount ?? "");
+    }
+  }
 
   return (
     <>
       <FormSection title="Charge">
+        <Field id={`${idPrefix}-title`} label="Title" span>
+          <DatalistInput
+            id={`${idPrefix}-title`}
+            name="title"
+            options={suggestions.expenseTitles.map((t) => t.title)}
+            placeholder="e.g. Hangar rent, Insurance premium"
+            disabled={readOnly}
+            value={fast.title}
+            onChange={(e) => onTitleChange(e.target.value)}
+          />
+        </Field>
         <FormGrid>
           <Field id={`${idPrefix}-date`} label="Date" required>
             <Input
@@ -98,18 +144,21 @@ function ExpenseFields({
               required
               disabled={readOnly}
               className="font-mono"
-              {...amountProps}
+              value={fast.amount}
+              onChange={(e) => fast.setAmount(e.target.value)}
             />
           </Field>
         </FormGrid>
         <FormGrid>
           <Field id={`${idPrefix}-payee`} label="Payee">
-            <Input
+            <DatalistInput
               id={`${idPrefix}-payee`}
               name="payee"
+              options={suggestions.payees}
               placeholder="optional"
               disabled={readOnly}
-              {...payeeProps}
+              value={fast.payee}
+              onChange={(e) => fast.setPayee(e.target.value)}
             />
           </Field>
           <Field id={`${idPrefix}-cat`} label="Category">
@@ -117,7 +166,8 @@ function ExpenseFields({
               id={`${idPrefix}-cat`}
               name="category"
               disabled={readOnly}
-              defaultValue={record?.category ?? ""}
+              value={fast.category}
+              onChange={(e) => fast.setCategory(e.target.value)}
             >
               <option value="">—</option>
               {CATEGORIES.map((c) => (
@@ -169,6 +219,7 @@ function collect(form: HTMLFormElement) {
   const fd = new FormData(form);
   return {
     date: String(fd.get("date") ?? ""),
+    title: String(fd.get("title") ?? ""),
     payee: String(fd.get("payee") ?? ""),
     amount: String(fd.get("amount") ?? ""),
     category: String(fd.get("category") ?? ""),
@@ -180,18 +231,22 @@ function collect(form: HTMLFormElement) {
 /** "+ Add expense" — create sheet, with scan-to-prefill and doc attach. */
 export function AddExpenseSheet({
   services,
+  suggestions,
   aiEnabled,
   blobEnabled,
   readOnly,
 }: {
   services: ServiceOption[];
+  suggestions: ExpenseSuggestions;
   aiEnabled: boolean;
   blobEnabled: boolean;
   readOnly: boolean;
 }) {
   const [date, setDate] = useState("");
+  const [title, setTitle] = useState("");
   const [payee, setPayee] = useState("");
   const [amount, setAmount] = useState("");
+  const [category, setCategory] = useState("");
   const [notes, setNotes] = useState("");
   const [scannedBlobUrl, setScannedBlobUrl] = useState<string | null>(null);
   const [scannedDocType, setScannedDocType] =
@@ -210,8 +265,10 @@ export function AddExpenseSheet({
 
   function resetScan() {
     setDate("");
+    setTitle("");
     setPayee("");
     setAmount("");
+    setCategory("");
     setNotes("");
     setScannedBlobUrl(null);
     setScannedDocType(undefined);
@@ -256,16 +313,18 @@ export function AddExpenseSheet({
           <ExpenseFields
             {...rp}
             services={services}
-            controlled={{
-              date,
-              setDate,
+            suggestions={suggestions}
+            fast={{
+              title,
+              setTitle,
               payee,
               setPayee,
               amount,
               setAmount,
-              notes,
-              setNotes,
+              category,
+              setCategory,
             }}
+            controlledExtras={{ date, setDate, notes, setNotes }}
           />
         </>
       )}
@@ -277,12 +336,14 @@ export function AddExpenseSheet({
 export function ExpenseRow({
   record,
   services,
+  suggestions,
   readOnly,
   meta,
   children,
 }: {
   record: ExpenseRecord;
   services: ServiceOption[];
+  suggestions: ExpenseSuggestions;
   readOnly: boolean;
   meta?: React.ReactNode;
   children: React.ReactNode;
@@ -305,7 +366,54 @@ export function ExpenseRow({
         await deleteExpense(record.id);
       }}
     >
-      {(rp) => <ExpenseFields {...rp} record={record} services={services} />}
+      {(rp) => (
+        <EditExpenseFields
+          rp={rp}
+          record={record}
+          services={services}
+          suggestions={suggestions}
+        />
+      )}
     </EntitySheet>
+  );
+}
+
+/**
+ * Edit-mode wrapper: holds the controlled fast-re-entry state seeded from the
+ * row, so the datalist + title-match prefill remain available while editing.
+ */
+function EditExpenseFields({
+  rp,
+  record,
+  services,
+  suggestions,
+}: {
+  rp: EntityFormRenderProps;
+  record: ExpenseRecord;
+  services: ServiceOption[];
+  suggestions: ExpenseSuggestions;
+}) {
+  const [title, setTitle] = useState(record.title ?? "");
+  const [payee, setPayee] = useState(record.payee ?? "");
+  const [amount, setAmount] = useState(record.amount ?? "");
+  const [category, setCategory] = useState(record.category ?? "");
+
+  return (
+    <ExpenseFields
+      {...rp}
+      record={record}
+      services={services}
+      suggestions={suggestions}
+      fast={{
+        title,
+        setTitle,
+        payee,
+        setPayee,
+        amount,
+        setAmount,
+        category,
+        setCategory,
+      }}
+    />
   );
 }
