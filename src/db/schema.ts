@@ -71,6 +71,7 @@ export const expenses = pgTable("expenses", {
   id: uuid("id").primaryKey().defaultRandom(),
   aircraftId: uuid("aircraft_id").notNull().references(() => aircraft.id),
   date: date("date").notNull(),
+  title: text("title"),
   payee: text("payee"),
   amount: numeric("amount", { precision: 12, scale: 2 }).notNull(),
   category: text("category"),

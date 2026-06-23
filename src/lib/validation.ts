@@ -33,6 +33,7 @@ export const serviceInput = z.object({
 
 export const expenseInput = z.object({
   date: dateString,
+  title: optionalString,
   payee: optionalString,
   amount: z.string().regex(/^\d+(\.\d{1,2})?$/, "expected a dollar amount"),
   category: optionalString,
