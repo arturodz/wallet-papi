@@ -7,16 +7,12 @@ import { NoAircraft } from "@/components/no-aircraft";
 import { canWrite, type Role } from "@/lib/auth/roles";
 import { toCents, formatUSD } from "@/lib/money";
 import { aiEnabled, blobEnabled } from "@/lib/env";
-import { ExpenseForm } from "./expense-form";
-import { DeleteExpenseButton } from "./delete-expense-button";
+import { ListHeader, EmptyState } from "@/components/ui/data-list";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  AddExpenseSheet,
+  ExpenseRow,
+  type ExpenseRecord,
+} from "./expense-form";
 
 export const dynamic = "force-dynamic";
 
@@ -50,53 +46,70 @@ export default async function ExpensesPage() {
 
   return (
     <main className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
-      <h1 className="font-mono text-2xl">Expense Ledger</h1>
-
-      {writable && (
-        <ExpenseForm
-          services={serviceRows}
-          aiEnabled={aiEnabled()}
-          blobEnabled={blobEnabled()}
-        />
-      )}
+      <ListHeader title="Expense Ledger">
+        {writable && (
+          <AddExpenseSheet
+            services={serviceRows}
+            aiEnabled={aiEnabled()}
+            blobEnabled={blobEnabled()}
+            readOnly={false}
+          />
+        )}
+      </ListHeader>
 
       {rows.length === 0 ? (
-        <p className="text-muted-foreground">
-          Pre-flight: no expenses recorded yet.
-        </p>
+        <EmptyState>
+          Pre-flight: no expenses recorded yet
+          {writable ? " — tap + to log one." : "."}
+        </EmptyState>
       ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Date</TableHead>
-              <TableHead>Payee</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Service</TableHead>
-              <TableHead className="text-right font-mono">Amount</TableHead>
-              {writable && <TableHead className="text-right">Actions</TableHead>}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {rows.map((x) => (
-              <TableRow key={x.id}>
-                <TableCell className="font-mono">{x.date}</TableCell>
-                <TableCell>{x.payee ?? "—"}</TableCell>
-                <TableCell>{x.category ?? "—"}</TableCell>
-                <TableCell className="text-muted-foreground">
-                  {x.serviceId ? serviceLabel.get(x.serviceId) ?? "—" : "—"}
-                </TableCell>
-                <TableCell className="text-right font-mono">
-                  {formatUSD(toCents(x.amount))}
-                </TableCell>
-                {writable && (
-                  <TableCell className="text-right">
-                    <DeleteExpenseButton id={x.id} />
-                  </TableCell>
-                )}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <ul className="space-y-2">
+          {rows.map((x) => {
+            const record: ExpenseRecord = {
+              id: x.id,
+              date: x.date,
+              payee: x.payee,
+              amount: x.amount,
+              category: x.category,
+              notes: x.notes,
+              serviceId: x.serviceId,
+            };
+            const sub = [
+              x.category,
+              x.serviceId ? serviceLabel.get(x.serviceId) : null,
+            ]
+              .filter(Boolean)
+              .join(" · ");
+            return (
+              <li key={x.id}>
+                <ExpenseRow
+                  record={record}
+                  services={serviceRows}
+                  readOnly={!writable}
+                  meta={
+                    <span className="font-mono text-sm tabular-nums">
+                      {formatUSD(toCents(x.amount))}
+                    </span>
+                  }
+                >
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                      {x.date}
+                    </span>
+                    <span className="truncate text-sm font-medium">
+                      {x.payee ?? "—"}
+                    </span>
+                  </div>
+                  {sub && (
+                    <div className="mt-0.5 truncate text-xs text-muted-foreground">
+                      {sub}
+                    </div>
+                  )}
+                </ExpenseRow>
+              </li>
+            );
+          })}
+        </ul>
       )}
     </main>
   );
