@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Gauge,
+  Plane,
   Timer,
   Wrench,
   Receipt,
@@ -18,6 +19,7 @@ type NavLink = { href: string; label: string; icon: LucideIcon };
 
 const links: NavLink[] = [
   { href: "/", label: "Dashboard", icon: Gauge },
+  { href: "/aircraft", label: "Aircraft", icon: Plane },
   { href: "/intervals", label: "Intervals", icon: Timer },
   { href: "/services", label: "Services", icon: Wrench },
   { href: "/expenses", label: "Expenses", icon: Receipt },
