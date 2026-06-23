@@ -1,12 +1,23 @@
+import { NextResponse, type NextRequest } from "next/server";
 import { auth } from "@/lib/auth/server";
 
-// Next.js 16 renamed the `middleware` file convention to `proxy`. The Neon
-// Auth `auth.middleware()` helper (from createNeonAuth) returns a standard
-// (request) => Promise<NextResponse> function, so it works unchanged as the
-// default proxy export. It refreshes the session cookie when needed and
-// redirects unauthenticated requests to `loginUrl`, sharing the same
-// baseUrl/cookies config as the server instance and the route handler.
-export default auth.middleware({ loginUrl: "/sign-in" });
+// Next.js 16 renamed the `middleware` file convention to `proxy`. The Neon Auth
+// `auth.middleware()` helper (from createNeonAuth) returns a standard
+// (request) => Promise<NextResponse> function that redirects unauthenticated
+// page requests to `loginUrl`.
+const authMiddleware = auth.middleware({ loginUrl: "/sign-in" });
+
+export default function proxy(request: NextRequest) {
+  // Server Actions POST to the page route with a `Next-Action` header. The auth
+  // middleware redirects those to /sign-in (307 → HTML), which the React Server
+  // Actions client can't parse ("An unexpected response was received from the
+  // server"), breaking every create/edit/delete. Let Server Actions through —
+  // each one enforces requireRole() server-side, so this is not a security gap.
+  if (request.headers.get("next-action")) {
+    return NextResponse.next();
+  }
+  return authMiddleware(request);
+}
 
 export const config = {
   // Run on all routes except Next internals, static files, the auth API
