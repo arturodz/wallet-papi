@@ -1,118 +1,131 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { createSquawk } from "@/app/actions/squawks";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
-const selectClass =
-  "h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+  createSquawk,
+  updateSquawk,
+  deleteSquawk,
+} from "@/app/actions/squawks";
+import { Input } from "@/components/ui/input";
+import {
+  EntitySheet,
+  type EntityFormRenderProps,
+} from "@/components/entity-sheet";
+import { AddTrigger, Row } from "@/components/ui/data-list";
+import {
+  Field,
+  FormGrid,
+  FormSection,
+  FormSelect,
+} from "@/components/ui/form-field";
 
 export interface SquawkFormOption {
   id: string;
   label: string;
 }
 
-export function SquawkForm({
+export interface SquawkRecord {
+  id: string;
+  title: string;
+  description: string | null;
+  severity: string | null;
+  status: string;
+  openedDate: string;
+  equipmentId: string | null;
+  resolvedByServiceId: string | null;
+}
+
+function collect(form: HTMLFormElement) {
+  const fd = new FormData(form);
+  return {
+    title: String(fd.get("title") ?? ""),
+    description: String(fd.get("description") ?? ""),
+    severity: String(fd.get("severity") ?? ""),
+    status: String(fd.get("status") ?? "open"),
+    openedDate: String(fd.get("openedDate") ?? ""),
+    equipmentId: String(fd.get("equipmentId") ?? ""),
+    resolvedByServiceId: String(fd.get("resolvedByServiceId") ?? ""),
+  };
+}
+
+function SquawkFields({
+  readOnly,
+  idPrefix,
+  record,
   equipment,
   services,
-}: {
+}: EntityFormRenderProps & {
+  record?: SquawkRecord;
   equipment: SquawkFormOption[];
   services: SquawkFormOption[];
 }) {
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
-
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setError(null);
-    const fd = new FormData(e.currentTarget);
-    const form = e.currentTarget;
-    const input = {
-      title: String(fd.get("title") ?? ""),
-      description: String(fd.get("description") ?? ""),
-      severity: String(fd.get("severity") ?? ""),
-      status: String(fd.get("status") ?? "open"),
-      openedDate: String(fd.get("openedDate") ?? ""),
-      equipmentId: String(fd.get("equipmentId") ?? ""),
-      resolvedByServiceId: String(fd.get("resolvedByServiceId") ?? ""),
-    };
-    startTransition(async () => {
-      try {
-        await createSquawk(input);
-        form.reset();
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to add squawk");
-      }
-    });
-  }
-
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Record a squawk</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2">
-          <div className="grid gap-1.5 sm:col-span-2">
-            <Label htmlFor="sq-title">Title</Label>
+    <>
+      <FormSection title="Discrepancy">
+        <Field id={`${idPrefix}-title`} label="Title" required span>
+          <Input
+            id={`${idPrefix}-title`}
+            name="title"
+            required
+            disabled={readOnly}
+            defaultValue={record?.title ?? ""}
+            placeholder="e.g. Comm 1 intermittent, oil door latch loose"
+          />
+        </Field>
+        <Field id={`${idPrefix}-desc`} label="Description" span>
+          <Input
+            id={`${idPrefix}-desc`}
+            name="description"
+            disabled={readOnly}
+            defaultValue={record?.description ?? ""}
+            placeholder="optional"
+          />
+        </Field>
+      </FormSection>
+
+      <FormSection title="Triage">
+        <FormGrid>
+          <Field id={`${idPrefix}-opened`} label="Opened date" required>
             <Input
-              id="sq-title"
-              name="title"
+              id={`${idPrefix}-opened`}
+              name="openedDate"
+              type="date"
               required
-              placeholder="e.g. Comm 1 intermittent, oil door latch loose"
+              disabled={readOnly}
+              defaultValue={record?.openedDate ?? ""}
             />
-          </div>
-          <div className="grid gap-1.5 sm:col-span-2">
-            <Label htmlFor="sq-desc">Description</Label>
-            <Input id="sq-desc" name="description" placeholder="optional" />
-          </div>
-          <div className="grid gap-1.5">
-            <Label htmlFor="sq-opened">Opened date</Label>
-            <Input id="sq-opened" name="openedDate" type="date" required />
-          </div>
-          <div className="grid gap-1.5">
-            <Label htmlFor="sq-severity">Severity</Label>
-            <select
-              id="sq-severity"
+          </Field>
+          <Field id={`${idPrefix}-severity`} label="Severity">
+            <FormSelect
+              id={`${idPrefix}-severity`}
               name="severity"
-              className={selectClass}
-              defaultValue=""
+              disabled={readOnly}
+              defaultValue={record?.severity ?? ""}
             >
               <option value="">—</option>
               <option value="low">Low</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>
               <option value="grounding">Grounding</option>
-            </select>
-          </div>
-          <div className="grid gap-1.5">
-            <Label htmlFor="sq-status">Status</Label>
-            <select
-              id="sq-status"
+            </FormSelect>
+          </Field>
+          <Field id={`${idPrefix}-status`} label="Status">
+            <FormSelect
+              id={`${idPrefix}-status`}
               name="status"
-              className={selectClass}
-              defaultValue="open"
+              disabled={readOnly}
+              defaultValue={record?.status ?? "open"}
             >
               <option value="open">Open</option>
               <option value="deferred">Deferred</option>
               <option value="resolved">Resolved</option>
-            </select>
-          </div>
-          <div className="grid gap-1.5">
-            <Label htmlFor="sq-equipment">Equipment</Label>
-            <select
-              id="sq-equipment"
+            </FormSelect>
+          </Field>
+          <Field id={`${idPrefix}-equipment`} label="Equipment">
+            <FormSelect
+              id={`${idPrefix}-equipment`}
               name="equipmentId"
-              className={selectClass}
-              defaultValue=""
+              disabled={readOnly}
+              defaultValue={record?.equipmentId ?? ""}
             >
               <option value="">— none —</option>
               {equipment.map((o) => (
@@ -120,32 +133,97 @@ export function SquawkForm({
                   {o.label}
                 </option>
               ))}
-            </select>
-          </div>
-          <div className="grid gap-1.5 sm:col-span-2">
-            <Label htmlFor="sq-service">Resolved by service</Label>
-            <select
-              id="sq-service"
-              name="resolvedByServiceId"
-              className={selectClass}
-              defaultValue=""
-            >
-              <option value="">— none —</option>
-              {services.map((o) => (
-                <option key={o.id} value={o.id}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex items-center gap-3 sm:col-span-2">
-            <Button type="submit" disabled={pending}>
-              {pending ? "Saving…" : "Add squawk"}
-            </Button>
-            {error && <span className="text-sm text-destructive">{error}</span>}
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+            </FormSelect>
+          </Field>
+        </FormGrid>
+        <Field
+          id={`${idPrefix}-service`}
+          label="Resolved by service"
+          help="Link the maintenance event that cleared this squawk."
+          span
+        >
+          <FormSelect
+            id={`${idPrefix}-service`}
+            name="resolvedByServiceId"
+            disabled={readOnly}
+            defaultValue={record?.resolvedByServiceId ?? ""}
+          >
+            <option value="">— none —</option>
+            {services.map((o) => (
+              <option key={o.id} value={o.id}>
+                {o.label}
+              </option>
+            ))}
+          </FormSelect>
+        </Field>
+      </FormSection>
+    </>
+  );
+}
+
+/** "+ Add squawk" — create sheet. */
+export function AddSquawkSheet({
+  equipment,
+  services,
+  readOnly,
+}: {
+  equipment: SquawkFormOption[];
+  services: SquawkFormOption[];
+  readOnly: boolean;
+}) {
+  return (
+    <EntitySheet
+      kicker="Squawk"
+      isEdit={false}
+      readOnly={readOnly}
+      saveLabel="Record squawk"
+      trigger={<AddTrigger label="Add squawk" />}
+      onSubmit={async (form) => {
+        await createSquawk(collect(form));
+      }}
+    >
+      {(rp) => <SquawkFields {...rp} equipment={equipment} services={services} />}
+    </EntitySheet>
+  );
+}
+
+/** Tappable row -> edit (or read-only) sheet. */
+export function SquawkRow({
+  record,
+  equipment,
+  services,
+  readOnly,
+  meta,
+  children,
+}: {
+  record: SquawkRecord;
+  equipment: SquawkFormOption[];
+  services: SquawkFormOption[];
+  readOnly: boolean;
+  meta?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <EntitySheet
+      kicker="Squawk"
+      isEdit
+      readOnly={readOnly}
+      saveLabel="Save changes"
+      trigger={
+        <Row readOnly={readOnly} meta={meta}>
+          {children}
+        </Row>
+      }
+      onSubmit={async (form) => {
+        await updateSquawk(record.id, collect(form));
+      }}
+      onDelete={async () => {
+        await deleteSquawk(record.id);
+      }}
+    >
+      {(rp) => (
+        <SquawkFields {...rp} record={record} equipment={equipment} services={services} />
+      )}
+    </EntitySheet>
   );
 }

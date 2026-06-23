@@ -6,18 +6,14 @@ import { getActiveAircraftId } from "@/lib/aircraft";
 import { NoAircraft } from "@/components/no-aircraft";
 import { canWrite, type Role } from "@/lib/auth/roles";
 import type { SquawkStatus } from "@/lib/squawks";
+import { ListHeader, EmptyState } from "@/components/ui/data-list";
 import { SquawkStatusBadge } from "./squawk-status-badge";
-import { SquawkStatusControl } from "./squawk-status-control";
-import { SquawkForm, type SquawkFormOption } from "./squawk-form";
-import { DeleteSquawkButton } from "./delete-squawk-button";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  AddSquawkSheet,
+  SquawkRow,
+  type SquawkFormOption,
+  type SquawkRecord,
+} from "./squawk-form";
 
 export const dynamic = "force-dynamic";
 
@@ -68,64 +64,68 @@ export default async function SquawksPage() {
 
   return (
     <main className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
-      <h1 className="font-mono text-2xl">Squawks</h1>
-
-      {writable && (
-        <SquawkForm equipment={equipmentOptions} services={serviceOptions} />
-      )}
+      <ListHeader title="Squawks">
+        {writable && (
+          <AddSquawkSheet
+            equipment={equipmentOptions}
+            services={serviceOptions}
+            readOnly={false}
+          />
+        )}
+      </ListHeader>
 
       {sorted.length === 0 ? (
-        <p className="text-muted-foreground">
+        <EmptyState>
           Pre-flight: no squawks — you&apos;re cleared.
-        </p>
+        </EmptyState>
       ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Severity</TableHead>
-              <TableHead>Opened</TableHead>
-              <TableHead>Equipment</TableHead>
-              <TableHead>Status</TableHead>
-              {writable && <TableHead className="text-right">Actions</TableHead>}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sorted.map((s) => (
-              <TableRow key={s.id}>
-                <TableCell>
-                  <div>{s.title}</div>
-                  {s.description && (
-                    <div className="text-xs text-muted-foreground">
+        <ul className="space-y-2">
+          {sorted.map((s) => {
+            const record: SquawkRecord = {
+              id: s.id,
+              title: s.title,
+              description: s.description,
+              severity: s.severity,
+              status: s.status,
+              openedDate: s.openedDate,
+              equipmentId: s.equipmentId,
+              resolvedByServiceId: s.resolvedByServiceId,
+            };
+            const sub = [
+              s.severity ? s.severity.toUpperCase() : null,
+              s.equipmentId ? equipmentName.get(s.equipmentId) : null,
+            ]
+              .filter(Boolean)
+              .join(" · ");
+            return (
+              <li key={s.id}>
+                <SquawkRow
+                  record={record}
+                  equipment={equipmentOptions}
+                  services={serviceOptions}
+                  readOnly={!writable}
+                  meta={<SquawkStatusBadge status={s.status as SquawkStatus} />}
+                >
+                  <div className="flex items-baseline gap-2">
+                    <span className="truncate text-sm font-medium">
+                      {s.title}
+                    </span>
+                    <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                      {s.openedDate}
+                    </span>
+                  </div>
+                  {(sub || s.description) && (
+                    <div className="mt-0.5 truncate text-xs text-muted-foreground">
+                      {sub}
+                      {sub && s.description ? " — " : ""}
                       {s.description}
                     </div>
                   )}
-                </TableCell>
-                <TableCell className="font-mono text-xs uppercase">
-                  {s.severity ?? "—"}
-                </TableCell>
-                <TableCell className="font-mono text-xs">{s.openedDate}</TableCell>
-                <TableCell className="text-sm">
-                  {s.equipmentId ? (equipmentName.get(s.equipmentId) ?? "—") : "—"}
-                </TableCell>
-                <TableCell>
-                  <SquawkStatusBadge status={s.status as SquawkStatus} />
-                </TableCell>
-                {writable && (
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <SquawkStatusControl
-                        id={s.id}
-                        status={s.status as SquawkStatus}
-                      />
-                      <DeleteSquawkButton id={s.id} />
-                    </div>
-                  </TableCell>
-                )}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                </SquawkRow>
+              </li>
+            );
+          })}
+        </ul>
       )}
     </main>
   );
