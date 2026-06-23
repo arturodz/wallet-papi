@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { equipment } from "@/db/schema";
@@ -8,16 +7,12 @@ import { NoAircraft } from "@/components/no-aircraft";
 import { canWrite, type Role } from "@/lib/auth/roles";
 import { warrantyStatus } from "@/lib/intervals";
 import { StatusBadge } from "@/components/status-badge";
-import { EquipmentForm } from "./equipment-form";
-import { DeleteEquipmentButton } from "./delete-equipment-button";
+import { ListHeader, EmptyState } from "@/components/ui/data-list";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  AddEquipmentSheet,
+  EquipmentRow,
+  type EquipmentRecord,
+} from "./equipment-form";
 
 export const dynamic = "force-dynamic";
 
@@ -43,57 +38,56 @@ export default async function EquipmentPage() {
 
   return (
     <main className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
-      <h1 className="font-mono text-2xl">Equipment</h1>
-
-      {writable && <EquipmentForm />}
+      <ListHeader title="Equipment">
+        {writable && <AddEquipmentSheet readOnly={false} />}
+      </ListHeader>
 
       {rows.length === 0 ? (
-        <p className="text-muted-foreground">
-          Pre-flight: no equipment recorded.
-        </p>
+        <EmptyState>
+          Pre-flight: no equipment recorded
+          {writable ? " — tap + to add an item." : "."}
+        </EmptyState>
       ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Make / Model</TableHead>
-              <TableHead>Serial</TableHead>
-              <TableHead>Warranty</TableHead>
-              {writable && <TableHead className="text-right">Actions</TableHead>}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {rows.map((e) => {
-              const makeModel = [e.make, e.model].filter(Boolean).join(" ");
-              return (
-                <TableRow key={e.id}>
-                  <TableCell>
-                    <Link
-                      href={`/equipment/${e.id}`}
-                      className="text-foreground underline-offset-4 hover:underline"
-                    >
-                      {e.name}
-                    </Link>
-                  </TableCell>
-                  <TableCell className="text-sm">{e.category ?? "—"}</TableCell>
-                  <TableCell className="text-sm">{makeModel || "—"}</TableCell>
-                  <TableCell className="font-mono text-xs">
-                    {e.serial ?? "—"}
-                  </TableCell>
-                  <TableCell>
-                    <StatusBadge status={warrantyStatus(e.warrantyExpiry, now)} />
-                  </TableCell>
-                  {writable && (
-                    <TableCell className="text-right">
-                      <DeleteEquipmentButton id={e.id} />
-                    </TableCell>
+        <ul className="space-y-2">
+          {rows.map((e) => {
+            const record: EquipmentRecord = {
+              id: e.id,
+              name: e.name,
+              category: e.category,
+              make: e.make,
+              model: e.model,
+              serial: e.serial,
+              installDate: e.installDate,
+              warrantyExpiry: e.warrantyExpiry,
+              notes: e.notes,
+            };
+            const makeModel = [e.make, e.model].filter(Boolean).join(" ");
+            const sub = [e.category, makeModel].filter(Boolean).join(" · ");
+            return (
+              <li key={e.id}>
+                <EquipmentRow
+                  record={record}
+                  readOnly={!writable}
+                  meta={<StatusBadge status={warrantyStatus(e.warrantyExpiry, now)} />}
+                >
+                  <div className="flex items-baseline gap-2">
+                    <span className="truncate text-sm font-medium">{e.name}</span>
+                    {e.serial && (
+                      <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                        {e.serial}
+                      </span>
+                    )}
+                  </div>
+                  {sub && (
+                    <div className="mt-0.5 truncate text-xs text-muted-foreground">
+                      {sub}
+                    </div>
                   )}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+                </EquipmentRow>
+              </li>
+            );
+          })}
+        </ul>
       )}
     </main>
   );
