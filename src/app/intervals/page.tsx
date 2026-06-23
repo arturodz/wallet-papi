@@ -1,6 +1,9 @@
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { intervals, aircraft } from "@/db/schema";
+import { intervals } from "@/db/schema";
 import { getCurrentProfile } from "@/lib/auth/guard";
+import { getActiveAircraft } from "@/lib/aircraft";
+import { NoAircraft } from "@/components/no-aircraft";
 import { canWrite, type Role } from "@/lib/auth/roles";
 import { computeIntervalStatus, severityRank } from "@/lib/intervals";
 import { StatusBadge } from "@/components/status-badge";
@@ -33,11 +36,16 @@ export default async function IntervalsPage() {
     );
   }
 
+  const plane = await getActiveAircraft();
+  if (!plane) return <NoAircraft />;
+
   const writable = canWrite(profile.role as Role);
   const now = new Date();
-  const [plane] = await db.select().from(aircraft).limit(1);
-  const currentTach = plane?.currentTach ?? 0;
-  const rows = await db.select().from(intervals);
+  const currentTach = plane.currentTach ?? 0;
+  const rows = await db
+    .select()
+    .from(intervals)
+    .where(eq(intervals.aircraftId, plane.id));
 
   const computed = rows
     .map((r) => ({ row: r, result: computeIntervalStatus(r, { currentTach, now }) }))

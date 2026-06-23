@@ -1,6 +1,9 @@
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { aircraft, expenses } from "@/db/schema";
+import { expenses } from "@/db/schema";
 import { getCurrentProfile } from "@/lib/auth/guard";
+import { getActiveAircraft } from "@/lib/aircraft";
+import { NoAircraft } from "@/components/no-aircraft";
 import { canWrite, type Role } from "@/lib/auth/roles";
 import { formatUSD } from "@/lib/money";
 import { computeTco, computeMonthlyBurn } from "@/lib/tco";
@@ -32,13 +35,18 @@ export default async function TcoPage() {
     );
   }
 
+  const plane = await getActiveAircraft();
+  if (!plane) return <NoAircraft />;
+
   const writable = canWrite(profile.role as Role);
-  const [plane] = await db.select().from(aircraft).limit(1);
-  const rows = await db.select().from(expenses);
+  const rows = await db
+    .select()
+    .from(expenses)
+    .where(eq(expenses.aircraftId, plane.id));
 
   const tco = computeTco(rows, {
-    currentTach: plane?.currentTach ?? 0,
-    acquisitionTach: plane?.acquisitionTach ?? null,
+    currentTach: plane.currentTach ?? 0,
+    acquisitionTach: plane.acquisitionTach ?? null,
   });
 
   const monthly = computeMonthlyBurn(rows).slice(-12);

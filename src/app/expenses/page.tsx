@@ -1,7 +1,9 @@
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { expenses, services } from "@/db/schema";
 import { getCurrentProfile } from "@/lib/auth/guard";
+import { getActiveAircraftId } from "@/lib/aircraft";
+import { NoAircraft } from "@/components/no-aircraft";
 import { canWrite, type Role } from "@/lib/auth/roles";
 import { toCents, formatUSD } from "@/lib/money";
 import { aiEnabled, blobEnabled } from "@/lib/env";
@@ -28,11 +30,19 @@ export default async function ExpensesPage() {
     );
   }
 
+  const activeId = await getActiveAircraftId();
+  if (!activeId) return <NoAircraft />;
+
   const writable = canWrite(profile.role as Role);
-  const rows = await db.select().from(expenses).orderBy(desc(expenses.date));
+  const rows = await db
+    .select()
+    .from(expenses)
+    .where(eq(expenses.aircraftId, activeId))
+    .orderBy(desc(expenses.date));
   const serviceRows = await db
     .select({ id: services.id, date: services.date, description: services.description })
     .from(services)
+    .where(eq(services.aircraftId, activeId))
     .orderBy(desc(services.date));
   const serviceLabel = new Map(
     serviceRows.map((s) => [s.id, `${s.date} · ${s.description}`]),

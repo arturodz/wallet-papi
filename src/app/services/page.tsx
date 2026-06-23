@@ -1,7 +1,9 @@
-import { asc, desc } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { services, intervals } from "@/db/schema";
 import { getCurrentProfile } from "@/lib/auth/guard";
+import { getActiveAircraftId } from "@/lib/aircraft";
+import { NoAircraft } from "@/components/no-aircraft";
 import { canWrite, type Role } from "@/lib/auth/roles";
 import { ServiceForm } from "./service-form";
 import { DeleteServiceButton } from "./delete-service-button";
@@ -26,11 +28,19 @@ export default async function ServicesPage() {
     );
   }
 
+  const activeId = await getActiveAircraftId();
+  if (!activeId) return <NoAircraft />;
+
   const writable = canWrite(profile.role as Role);
-  const rows = await db.select().from(services).orderBy(desc(services.date));
+  const rows = await db
+    .select()
+    .from(services)
+    .where(eq(services.aircraftId, activeId))
+    .orderBy(desc(services.date));
   const intervalOptions = await db
     .select({ id: intervals.id, name: intervals.name })
     .from(intervals)
+    .where(eq(intervals.aircraftId, activeId))
     .orderBy(asc(intervals.name));
 
   return (

@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { ne } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 import { db } from "@/db";
-import { aircraft, intervals, equipment, squawks } from "@/db/schema";
+import { intervals, equipment, squawks } from "@/db/schema";
 import { getCurrentProfile } from "@/lib/auth/guard";
+import { getActiveAircraft } from "@/lib/aircraft";
+import { NoAircraft } from "@/components/no-aircraft";
 import {
   computeIntervalStatus,
   warrantyStatus,
@@ -39,14 +41,20 @@ export default async function Home() {
     );
   }
 
+  const plane = await getActiveAircraft();
+  if (!plane) return <NoAircraft />;
+
   const now = new Date();
-  const [plane] = await db.select().from(aircraft).limit(1);
-  const currentTach = plane?.currentTach ?? 0;
+  const activeId = plane.id;
+  const currentTach = plane.currentTach ?? 0;
 
   const [intervalRows, equipmentRows, openSquawks] = await Promise.all([
-    db.select().from(intervals),
-    db.select().from(equipment),
-    db.select().from(squawks).where(ne(squawks.status, "resolved")),
+    db.select().from(intervals).where(eq(intervals.aircraftId, activeId)),
+    db.select().from(equipment).where(eq(equipment.aircraftId, activeId)),
+    db
+      .select()
+      .from(squawks)
+      .where(and(eq(squawks.aircraftId, activeId), ne(squawks.status, "resolved"))),
   ]);
 
   // Build the airworthiness list: intervals + non-"none" warranties.

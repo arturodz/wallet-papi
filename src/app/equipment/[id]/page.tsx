@@ -2,8 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { aircraft, equipment, intervals, squawks } from "@/db/schema";
+import { equipment, intervals, squawks } from "@/db/schema";
 import { getCurrentProfile } from "@/lib/auth/guard";
+import { getActiveAircraft } from "@/lib/aircraft";
+import { NoAircraft } from "@/components/no-aircraft";
 import { canWrite, type Role } from "@/lib/auth/roles";
 import { computeIntervalStatus, warrantyStatus } from "@/lib/intervals";
 import type { SquawkStatus } from "@/lib/squawks";
@@ -55,14 +57,20 @@ export default async function EquipmentDetailPage({
     );
   }
 
-  const [item] = await db.select().from(equipment).where(eq(equipment.id, id));
+  const plane = await getActiveAircraft();
+  if (!plane) return <NoAircraft />;
+
+  // Scope to the active plane: an item belonging to another aircraft is a 404.
+  const [item] = await db
+    .select()
+    .from(equipment)
+    .where(and(eq(equipment.id, id), eq(equipment.aircraftId, plane.id)));
   if (!item) notFound();
 
   const writable = canWrite(profile.role as Role);
   const now = new Date();
 
-  const [plane] = await db.select().from(aircraft).limit(1);
-  const currentTach = plane?.currentTach ?? 0;
+  const currentTach = plane.currentTach ?? 0;
 
   const [linkedIntervals, openSquawks, docs] = await Promise.all([
     db.select().from(intervals).where(eq(intervals.equipmentId, id)),

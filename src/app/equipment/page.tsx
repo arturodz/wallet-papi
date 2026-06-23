@@ -1,7 +1,10 @@
 import Link from "next/link";
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { equipment } from "@/db/schema";
 import { getCurrentProfile } from "@/lib/auth/guard";
+import { getActiveAircraftId } from "@/lib/aircraft";
+import { NoAircraft } from "@/components/no-aircraft";
 import { canWrite, type Role } from "@/lib/auth/roles";
 import { warrantyStatus } from "@/lib/intervals";
 import { StatusBadge } from "@/components/status-badge";
@@ -28,9 +31,15 @@ export default async function EquipmentPage() {
     );
   }
 
+  const activeId = await getActiveAircraftId();
+  if (!activeId) return <NoAircraft />;
+
   const writable = canWrite(profile.role as Role);
   const now = new Date();
-  const rows = await db.select().from(equipment);
+  const rows = await db
+    .select()
+    .from(equipment)
+    .where(eq(equipment.aircraftId, activeId));
 
   return (
     <main className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">

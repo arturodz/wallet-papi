@@ -1,6 +1,9 @@
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { squawks, equipment, services } from "@/db/schema";
 import { getCurrentProfile } from "@/lib/auth/guard";
+import { getActiveAircraftId } from "@/lib/aircraft";
+import { NoAircraft } from "@/components/no-aircraft";
 import { canWrite, type Role } from "@/lib/auth/roles";
 import type { SquawkStatus } from "@/lib/squawks";
 import { SquawkStatusBadge } from "./squawk-status-badge";
@@ -35,11 +38,14 @@ export default async function SquawksPage() {
     );
   }
 
+  const activeId = await getActiveAircraftId();
+  if (!activeId) return <NoAircraft />;
+
   const writable = canWrite(profile.role as Role);
   const [rows, equipmentRows, serviceRows] = await Promise.all([
-    db.select().from(squawks),
-    db.select().from(equipment),
-    db.select().from(services),
+    db.select().from(squawks).where(eq(squawks.aircraftId, activeId)),
+    db.select().from(equipment).where(eq(equipment.aircraftId, activeId)),
+    db.select().from(services).where(eq(services.aircraftId, activeId)),
   ]);
 
   const equipmentName = new Map(equipmentRows.map((e) => [e.id, e.name]));
