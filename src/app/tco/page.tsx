@@ -89,9 +89,14 @@ export default async function TcoPage() {
                 </p>
               </div>
             ) : (
-              <div className="font-mono text-3xl tabular-nums">
-                {formatUSD(tco.costPerHourCents)}
-                <span className="text-sm text-muted-foreground"> / hr</span>
+              <div>
+                <div className="font-mono text-3xl tabular-nums">
+                  {formatUSD(tco.costPerHourCents)}
+                  <span className="text-sm text-muted-foreground"> / hr</span>
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  operating costs only — excludes acquisition
+                </p>
               </div>
             )}
           </CardContent>

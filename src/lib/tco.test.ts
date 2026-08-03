@@ -18,10 +18,10 @@ describe("computeTco", () => {
     expect(r.byCategory.acquisition).toBe(5000000);
     expect(r.byCategory.uncategorized).toBe(30000);
   });
-  it("cost per hour uses hours flown under ownership", () => {
+  it("cost per hour uses operating costs only (acquisition excluded)", () => {
     const r = computeTco(expenses, { currentTach: 120, acquisitionTach: 100 });
-    // 5,075,050 cents / 20 hours = 253,752.5 -> round to 253753
-    expect(r.costPerHourCents).toBe(253753);
+    // (300.00 + 150.50 + 300.00) = 75,050 cents / 20 hours = 3,752.5 -> round to 3753
+    expect(r.costPerHourCents).toBe(3753);
   });
   it("cost per hour is null when no hours flown (avoid divide by zero)", () => {
     const r = computeTco(expenses, { currentTach: 100, acquisitionTach: 100 });
