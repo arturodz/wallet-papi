@@ -92,6 +92,11 @@ export const documentInput = z.object({
   entityId: z.string().uuid("expected an entity id"),
 });
 
+export const noteInput = z.object({
+  date: dateString,
+  text: z.string().min(1, "text is required"),
+});
+
 export const aircraftInput = z.object({
   tailNumber: z.string().min(1, "tail number is required"),
   make: optionalString,
@@ -111,3 +116,4 @@ export type ServiceInput = z.infer<typeof serviceInput>;
 export type ExpenseInput = z.infer<typeof expenseInput>;
 export type AircraftInput = z.infer<typeof aircraftInput>;
 export type DocumentInput = z.infer<typeof documentInput>;
+export type NoteInput = z.infer<typeof noteInput>;

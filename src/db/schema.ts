@@ -92,6 +92,15 @@ export const squawks = pgTable("squawks", {
   resolvedByServiceId: uuid("resolved_by_service_id").references(() => services.id),
 });
 
+// ponytail: free-form dated notes (e.g. "Hobbs vs total airframe differ ~2,300 hr").
+// Add categories/pinning only if the list ever gets long enough to need them.
+export const notes = pgTable("notes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  aircraftId: uuid("aircraft_id").notNull().references(() => aircraft.id),
+  date: date("date").notNull(),
+  text: text("text").notNull(),
+});
+
 export const documents = pgTable("documents", {
   id: uuid("id").primaryKey().defaultRandom(),
   blobUrl: text("blob_url").notNull(),

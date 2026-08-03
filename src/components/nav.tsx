@@ -11,6 +11,7 @@ import {
   TriangleAlert,
   Radio,
   DollarSign,
+  StickyNote,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ const links: NavLink[] = [
   { href: "/squawks", label: "Squawks", icon: TriangleAlert },
   { href: "/equipment", label: "Equipment", icon: Radio },
   { href: "/tco", label: "TCO", icon: DollarSign },
+  { href: "/notes", label: "Notes", icon: StickyNote },
 ];
 
 function isActive(pathname: string, href: string): boolean {
@@ -109,7 +111,7 @@ export function Nav({
         className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/90 backdrop-blur md:hidden"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        <ul className="grid grid-cols-7">
+        <ul className="grid grid-cols-8">
           {links.map((l) => {
             const active = isActive(pathname, l.href);
             const Icon = l.icon;
