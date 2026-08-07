@@ -1,0 +1,390 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-07T22:22:54Z",
+  "title": "Design System: Wallet PAPI",
+  "extensions": {
+    "colorMeta": {
+      "ramp-black": {
+        "role": "neutral",
+        "displayName": "Ramp Black",
+        "tonalRamp": [
+          "oklch(15% 0.012 250)",
+          "oklch(25% 0.012 250)",
+          "oklch(35% 0.012 250)",
+          "oklch(45% 0.012 250)",
+          "oklch(60% 0.012 250)",
+          "oklch(72% 0.012 250)",
+          "oklch(85% 0.012 250)",
+          "oklch(95% 0.012 250)"
+        ]
+      },
+      "backlit-slate": {
+        "role": "neutral",
+        "displayName": "Backlit Slate",
+        "tonalRamp": [
+          "oklch(15% 0.013 250)",
+          "oklch(25% 0.013 250)",
+          "oklch(35% 0.013 250)",
+          "oklch(45% 0.013 250)",
+          "oklch(60% 0.013 250)",
+          "oklch(72% 0.013 250)",
+          "oklch(85% 0.013 250)",
+          "oklch(95% 0.013 250)"
+        ]
+      },
+      "elevated-slate": {
+        "role": "neutral",
+        "displayName": "Elevated Slate",
+        "tonalRamp": [
+          "oklch(15% 0.012 250)",
+          "oklch(25% 0.012 250)",
+          "oklch(35% 0.012 250)",
+          "oklch(45% 0.012 250)",
+          "oklch(60% 0.012 250)",
+          "oklch(72% 0.012 250)",
+          "oklch(85% 0.012 250)",
+          "oklch(95% 0.012 250)"
+        ]
+      },
+      "instrument-white": {
+        "role": "primary",
+        "displayName": "Instrument White",
+        "tonalRamp": [
+          "oklch(15% 0.005 250)",
+          "oklch(25% 0.005 250)",
+          "oklch(35% 0.005 250)",
+          "oklch(45% 0.005 250)",
+          "oklch(60% 0.005 250)",
+          "oklch(72% 0.005 250)",
+          "oklch(85% 0.005 250)",
+          "oklch(95% 0.005 250)"
+        ]
+      },
+      "primary-control": {
+        "role": "primary",
+        "displayName": "Primary Control",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(35% 0 0)",
+          "oklch(45% 0 0)",
+          "oklch(60% 0 0)",
+          "oklch(72% 0 0)",
+          "oklch(85% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "muted-readout": {
+        "role": "neutral",
+        "displayName": "Muted Readout",
+        "tonalRamp": [
+          "oklch(15% 0.012 250)",
+          "oklch(25% 0.012 250)",
+          "oklch(35% 0.012 250)",
+          "oklch(45% 0.012 250)",
+          "oklch(60% 0.012 250)",
+          "oklch(72% 0.012 250)",
+          "oklch(85% 0.012 250)",
+          "oklch(95% 0.012 250)"
+        ]
+      },
+      "focus-blue": {
+        "role": "primary",
+        "displayName": "Focus Bearing Blue",
+        "tonalRamp": [
+          "oklch(15% 0.05 250)",
+          "oklch(25% 0.05 250)",
+          "oklch(35% 0.05 250)",
+          "oklch(45% 0.05 250)",
+          "oklch(60% 0.05 250)",
+          "oklch(72% 0.05 250)",
+          "oklch(85% 0.05 250)",
+          "oklch(95% 0.05 250)"
+        ]
+      },
+      "clear-green": {
+        "role": "secondary",
+        "displayName": "Clear Green",
+        "tonalRamp": [
+          "oklch(26.2% 0.051 172.552)",
+          "oklch(43.2% 0.095 166.913)",
+          "oklch(50.8% 0.118 165.612)",
+          "oklch(59.6% 0.145 163.225)",
+          "oklch(76.5% 0.177 163.223)",
+          "oklch(84.5% 0.143 164.978)",
+          "oklch(95% 0.052 163.051)",
+          "oklch(97.9% 0.021 166.113)"
+        ]
+      },
+      "caution-amber": {
+        "role": "secondary",
+        "displayName": "Caution Amber",
+        "tonalRamp": [
+          "oklch(27.9% 0.077 45.635)",
+          "oklch(47.3% 0.137 46.201)",
+          "oklch(55.5% 0.163 48.998)",
+          "oklch(66.6% 0.179 58.318)",
+          "oklch(82.8% 0.189 84.429)",
+          "oklch(87.9% 0.169 91.605)",
+          "oklch(96.2% 0.059 95.617)",
+          "oklch(98.7% 0.022 95.277)"
+        ]
+      },
+      "warning-red": {
+        "role": "secondary",
+        "displayName": "Warning Red",
+        "tonalRamp": [
+          "oklch(25.8% 0.092 26.042)",
+          "oklch(44.4% 0.177 26.899)",
+          "oklch(50.5% 0.213 27.518)",
+          "oklch(57.7% 0.245 27.325)",
+          "oklch(70.4% 0.191 22.216)",
+          "oklch(80.8% 0.114 19.571)",
+          "oklch(93.6% 0.032 17.717)",
+          "oklch(97.1% 0.013 17.38)"
+        ]
+      },
+      "quiet-slate": {
+        "role": "neutral",
+        "displayName": "Quiet Slate",
+        "tonalRamp": [
+          "oklch(12.9% 0.042 264.695)",
+          "oklch(27.9% 0.041 260.031)",
+          "oklch(37.2% 0.044 257.287)",
+          "oklch(44.6% 0.043 257.281)",
+          "oklch(70.4% 0.04 256.788)",
+          "oklch(86.9% 0.022 252.894)",
+          "oklch(96.8% 0.007 247.896)",
+          "oklch(98.4% 0.003 247.858)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Instrument Display",
+        "purpose": "Large tach, Hobbs, cost, and readiness values only."
+      },
+      "headline": {
+        "displayName": "Call-sign Headline",
+        "purpose": "Page titles and aircraft tail numbers."
+      },
+      "title": {
+        "displayName": "Task Title",
+        "purpose": "Sheet titles and focused section names."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Forms and explanatory copy."
+      },
+      "compact-body": {
+        "displayName": "Compact Body",
+        "purpose": "Rows, buttons, cards, and dense operational UI."
+      },
+      "label": {
+        "displayName": "Instrument Label",
+        "purpose": "Uppercase readout labels and status microcopy."
+      }
+    },
+    "shadows": [
+      {
+        "name": "clear-glow",
+        "value": "0 0 18px -6px rgba(16, 185, 129, 0.7)",
+        "purpose": "Emphasized OK status only."
+      },
+      {
+        "name": "caution-glow",
+        "value": "0 0 18px -6px rgba(245, 158, 11, 0.7)",
+        "purpose": "Due-soon status only."
+      },
+      {
+        "name": "warning-glow",
+        "value": "0 0 18px -6px rgba(239, 68, 68, 0.8)",
+        "purpose": "Overdue status only."
+      },
+      {
+        "name": "sheet-lift",
+        "value": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+        "purpose": "Bottom sheets and right-side panels only."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-fast",
+        "value": "150ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Button, navigation, and field state changes."
+      },
+      {
+        "name": "backdrop-fade",
+        "value": "200ms cubic-bezier(0, 0, 0.2, 1)",
+        "purpose": "Sheet backdrop opacity only."
+      },
+      {
+        "name": "sheet-transform",
+        "value": "300ms cubic-bezier(0, 0, 0.2, 1)",
+        "purpose": "Sheet transform and opacity, disabled for reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The next decisive action in a task.",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\">Save service</button>",
+      "css": ".ds-btn-primary { display:inline-flex; align-items:center; justify-content:center; height:32px; padding:0 10px; border:1px solid transparent; border-radius:10px; background:var(--primary, oklch(0.922 0 0)); color:var(--primary-foreground, oklch(0.205 0.013 250)); font:500 14px/20px Geist, system-ui, sans-serif; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { background:color-mix(in oklch, var(--primary, oklch(0.922 0 0)) 80%, transparent); } .ds-btn-primary:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; box-shadow:0 0 0 3px color-mix(in oklch, var(--ring, oklch(0.62 0.05 250)) 50%, transparent); } .ds-btn-primary:active { transform:translateY(1px); }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "A bordered secondary action on dark surfaces.",
+      "html": "<button class=\"ds-btn-outline\" type=\"button\">Cancel</button>",
+      "css": ".ds-btn-outline { display:inline-flex; align-items:center; justify-content:center; height:32px; padding:0 10px; border:1px solid var(--input, oklch(1 0 0 / 15%)); border-radius:10px; background:oklch(1 0 0 / 4.5%); color:var(--foreground, oklch(0.97 0.005 250)); font:500 14px/20px Geist, system-ui, sans-serif; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-outline:hover { background:oklch(1 0 0 / 7.5%); } .ds-btn-outline:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; box-shadow:0 0 0 3px color-mix(in oklch, var(--ring, oklch(0.62 0.05 250)) 50%, transparent); } .ds-btn-outline:active { transform:translateY(1px); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "A quiet filled action for supporting choices.",
+      "html": "<button class=\"ds-btn-secondary\" type=\"button\">View details</button>",
+      "css": ".ds-btn-secondary { display:inline-flex; align-items:center; justify-content:center; height:32px; padding:0 10px; border:1px solid transparent; border-radius:10px; background:var(--secondary, oklch(0.269 0.012 250)); color:var(--secondary-foreground, oklch(0.97 0.005 250)); font:500 14px/20px Geist, system-ui, sans-serif; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-secondary:hover { background:color-mix(in oklch, var(--secondary, oklch(0.269 0.012 250)), var(--foreground, oklch(0.97 0.005 250)) 5%); } .ds-btn-secondary:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; } .ds-btn-secondary:active { transform:translateY(1px); }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "A low-emphasis action that appears on interaction.",
+      "html": "<button class=\"ds-btn-ghost\" type=\"button\">Sign out</button>",
+      "css": ".ds-btn-ghost { display:inline-flex; align-items:center; justify-content:center; height:32px; padding:0 10px; border:1px solid transparent; border-radius:10px; background:transparent; color:var(--foreground, oklch(0.97 0.005 250)); font:500 14px/20px Geist, system-ui, sans-serif; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-ghost:hover { background:var(--muted, oklch(0.269 0.012 250)); } .ds-btn-ghost:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; } .ds-btn-ghost:active { transform:translateY(1px); }"
+    },
+    {
+      "name": "Destructive Button",
+      "kind": "button",
+      "refersTo": "button-destructive",
+      "description": "A destructive action with warning color and restrained fill.",
+      "html": "<button class=\"ds-btn-destructive\" type=\"button\">Delete</button>",
+      "css": ".ds-btn-destructive { display:inline-flex; align-items:center; justify-content:center; height:32px; padding:0 10px; border:1px solid transparent; border-radius:10px; background:oklch(70.4% 0.191 22.216 / 20%); color:var(--destructive, oklch(70.4% 0.191 22.216)); font:500 14px/20px Geist, system-ui, sans-serif; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-destructive:hover { background:oklch(70.4% 0.191 22.216 / 30%); } .ds-btn-destructive:focus-visible { outline:2px solid var(--destructive, oklch(70.4% 0.191 22.216)); outline-offset:2px; box-shadow:0 0 0 3px oklch(70.4% 0.191 22.216 / 40%); } .ds-btn-destructive:active { transform:translateY(1px); }"
+    },
+    {
+      "name": "Link Button",
+      "kind": "button",
+      "refersTo": "button-link",
+      "description": "An inline action embedded in supporting copy.",
+      "html": "<button class=\"ds-btn-link\" type=\"button\">View all</button>",
+      "css": ".ds-btn-link { display:inline-flex; align-items:center; height:32px; padding:0; border:0; background:transparent; color:var(--foreground, oklch(0.97 0.005 250)); font:500 14px/20px Geist, system-ui, sans-serif; text-underline-offset:4px; } .ds-btn-link:hover { text-decoration:underline; } .ds-btn-link:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; border-radius:6px; } .ds-btn-link:active { opacity:0.8; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "A compact dark field that remains zoom-safe on phones.",
+      "html": "<input class=\"ds-input\" type=\"text\" value=\"N12345\" aria-label=\"Tail number\">",
+      "css": ".ds-input { width:100%; height:32px; padding:4px 10px; border:1px solid var(--input, oklch(1 0 0 / 15%)); border-radius:10px; background:oklch(1 0 0 / 4.5%); color:var(--foreground, oklch(0.97 0.005 250)); font:400 16px/24px Geist, system-ui, sans-serif; transition:border-color 150ms cubic-bezier(0.4,0,0.2,1), box-shadow 150ms cubic-bezier(0.4,0,0.2,1); } .ds-input:hover { border-color:oklch(1 0 0 / 24%); } .ds-input:focus-visible { outline:none; border-color:var(--ring, oklch(0.62 0.05 250)); box-shadow:0 0 0 3px color-mix(in oklch, var(--ring, oklch(0.62 0.05 250)) 50%, transparent); } .ds-input:active { border-color:var(--ring, oklch(0.62 0.05 250)); }"
+    },
+    {
+      "name": "Active Navigation Item",
+      "kind": "nav",
+      "refersTo": "nav-item-active",
+      "description": "A familiar active row in the desktop navigation rail.",
+      "html": "<a class=\"ds-nav-active\" href=\"#\" aria-current=\"page\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" aria-hidden=\"true\"><path d=\"M4 13h6V4H4v9Zm0 7h6v-4H4v4Zm10 0h6v-9h-6v9Zm0-16v4h6V4h-6Z\"/></svg><span>Dashboard</span></a>",
+      "css": ".ds-nav-active { display:flex; align-items:center; gap:12px; min-height:44px; padding:0 12px; border-radius:6px; background:var(--accent, oklch(0.279 0.014 250)); color:var(--foreground, oklch(0.97 0.005 250)); font:400 14px/20px Geist, system-ui, sans-serif; text-decoration:none; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1); } .ds-nav-active svg { width:16px; height:16px; flex:none; } .ds-nav-active:hover { background:color-mix(in oklch, var(--accent, oklch(0.279 0.014 250)) 80%, var(--foreground, oklch(0.97 0.005 250))); } .ds-nav-active:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; } .ds-nav-active:active { background:var(--muted, oklch(0.269 0.012 250)); }"
+    },
+    {
+      "name": "Clear Status Badge",
+      "kind": "chip",
+      "refersTo": "status-badge-clear",
+      "description": "A compact annunciator badge for airworthy or current status.",
+      "html": "<span class=\"ds-status-clear\"><span class=\"ds-status-dot\"></span>OK</span>",
+      "css": ".ds-status-clear { display:inline-flex; align-items:center; gap:6px; padding:2px 8px; border:1px solid oklch(69.6% 0.17 162.48 / 40%); border-radius:999px; background:oklch(69.6% 0.17 162.48 / 10%); color:oklch(76.5% 0.177 163.223); font:600 10px/15px \"Geist Mono\", ui-monospace, monospace; letter-spacing:0.05em; } .ds-status-dot { width:6px; height:6px; border-radius:999px; background:oklch(76.5% 0.177 163.223); } .ds-status-clear:hover { background:oklch(69.6% 0.17 162.48 / 16%); } .ds-status-clear:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; }"
+    },
+    {
+      "name": "Backlit Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "A quiet tonal container for a focused block of content.",
+      "html": "<article class=\"ds-card\"><h3 class=\"ds-card-title\">Service record</h3><p class=\"ds-card-copy\">Annual inspection completed.</p></article>",
+      "css": ".ds-card { padding:16px; border:1px solid oklch(1 0 0 / 10%); border-radius:14px; background:var(--card, oklch(0.205 0.013 250)); color:var(--card-foreground, oklch(0.97 0.005 250)); font-family:Geist, system-ui, sans-serif; transition:border-color 150ms cubic-bezier(0.4,0,0.2,1); } .ds-card-title { margin:0; font-size:16px; font-weight:500; line-height:22px; } .ds-card-copy { margin:4px 0 0; color:var(--muted-foreground, oklch(0.7 0.012 250)); font-size:14px; line-height:20px; } .ds-card:hover { border-color:color-mix(in oklch, var(--ring, oklch(0.62 0.05 250)) 40%, transparent); } .ds-card:focus-within { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Calm Instrument Panel",
+    "overview": "Wallet PAPI is a precise, calm, low-glare tool for an aircraft owner standing beside a plane in a dim hangar, phone in one hand and maintenance work in progress. The dark, cool surface reduces glare. Information arrives in familiar controls, compact lists, and fixed-width readouts instead of decorative aviation theater.\n\nThe system is restrained by default. Neutral tonal layers organize the interface; emerald, amber, and red appear only when readiness status requires them. Aviation references wink through annunciator dots, call-sign treatment, and pre-flight language. They never imitate a skeuomorphic 747 panel.",
+    "keyCharacteristics": [
+      "Low-glare cool neutrals with fine borders and backlit tonal separation.",
+      "Geist for ordinary interface work; Geist Mono only for real instrument data.",
+      "Compact, phone-friendly controls with crisp focus and active states.",
+      "Status colors that carry one stable operational meaning everywhere.",
+      "Data first, chrome second, with sheets reserved for focused create and edit tasks."
+    ],
+    "rules": [
+      {
+        "name": "The Annunciator Rule",
+        "body": "Emerald means OK, amber means caution, and red means warning. Never reuse these hues as decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Low-Glare Rule",
+        "body": "Ramp Black owns the canvas. Backlit Slate and Elevated Slate create depth through lightness, not saturation.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ten Percent Rule",
+        "body": "Functional chroma occupies no more than ten percent of a normal screen. Its rarity preserves signal strength.",
+        "section": "colors"
+      },
+      {
+        "name": "The Readout Rule",
+        "body": "Use Geist Mono only for tach and Hobbs hours, serials, tail numbers, money, status labels, and measured values. Generic technical decoration is forbidden.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "Every numeric readout uses tabular figures so columns and changing values remain stable.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tonal-First Rule",
+        "body": "If Ramp Black, Backlit Slate, and a fine ring can express hierarchy, a shadow is forbidden.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Signal-Only Glow Rule",
+        "body": "Green, amber, and red glows belong only to live readiness states. No decorative bloom.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** use Ramp Black, Backlit Slate, and Elevated Slate as the default hierarchy.",
+      "**Do** reserve green for OK, amber for due soon, and red for overdue or destructive states.",
+      "**Do** keep list data visible first; open create and edit forms in a responsive sheet.",
+      "**Do** keep phone controls easy to tap even when their visual height is compact.",
+      "**Do** use aircraft language sparingly where it clarifies the task, such as call-sign, pre-flight, and squawk.",
+      "**Do** use Backlit Slate navigation blur only where a fixed surface must retain context over scrolling content."
+    ],
+    "donts": [
+      "**Don't** imitate a skeuomorphic 747 panel. Aviation references must wink, not shout.",
+      "**Don't** use Geist Mono as generic technical decoration. It is reserved for true instrument readouts.",
+      "**Don't** decorate with annunciator colors. They carry functional meaning.",
+      "**Don't** place thick colored side stripes on cards, rows, callouts, or alerts.",
+      "**Don't** use gradient text, decorative glass cards, nested cards, or identical card grids.",
+      "**Don't** turn the dashboard into a generic hero-metric template. Readiness and maintenance context come first.",
+      "**Don't** reach for a modal first. Use inline disclosure or the established responsive sheet.",
+      "**Don't** animate layout properties or choreograph page-load entrances."
+    ]
+  }
+}
