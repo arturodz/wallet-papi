@@ -253,7 +253,7 @@ Components are compact and confident. Their shapes are familiar, their targets r
 - **Style:** Desktop and iPad landscape use a fixed 224-pixel left rail from the large breakpoint. Phone and iPad portrait use a safe-area-aware identity bar and exactly five bottom tabs: Dashboard, Services, Expenses, Squawks, and More. More is a normal route that exposes every secondary destination. Active items use Elevated Slate or Instrument White; inactive items stay Muted Readout.
 
 ### Instrument Strip
-- **Style:** Related measurements share one bordered strip with internal dividers. Use two columns on phone and four on larger layouts. Never split summary measurements into identical floating cards.
+- **Style:** Related measurements share one bordered strip with internal dividers. Short dashboard values use two columns on phone and four on larger layouts. Two-reading financial summaries stack on phone so currency remains legible, then split into two columns on larger layouts. Never split summary measurements into identical floating cards.
 - **Behavior:** Values use tabular figures and semantic text color. Status dots pair color with labels. Individual cells never glow.
 
 ### Sheets

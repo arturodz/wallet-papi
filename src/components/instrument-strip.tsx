@@ -19,8 +19,10 @@ export function InstrumentStrip({
     <section
       aria-label={label}
       className={cn(
-        "grid grid-cols-2 overflow-hidden rounded-xl border border-border bg-card/60",
-        items.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-4",
+        "grid overflow-hidden rounded-xl border border-border bg-card/60",
+        items.length === 2
+          ? "grid-cols-1 sm:grid-cols-2"
+          : "grid-cols-2 sm:grid-cols-4",
       )}
     >
       {items.map((item) => {
@@ -29,8 +31,10 @@ export function InstrumentStrip({
           <div
             key={item.label}
             className={cn(
-              "min-w-0 border-border p-4 odd:border-r sm:border-r sm:border-b-0 sm:last:border-r-0",
-              items.length > 2 && "[&:nth-child(-n+2)]:border-b",
+              "min-w-0 border-border p-4",
+              items.length === 2
+                ? "border-b last:border-b-0 sm:border-r sm:border-b-0 sm:last:border-r-0"
+                : "odd:border-r [&:nth-child(-n+2)]:border-b sm:border-r sm:[&:nth-child(-n+2)]:border-b-0 sm:last:border-r-0",
             )}
           >
             <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
