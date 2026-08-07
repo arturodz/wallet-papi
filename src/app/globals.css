@@ -124,11 +124,20 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
   html {
-    @apply font-sans;
+    min-height: 100%;
+    @apply bg-background font-sans;
+  }
+  body {
+    @apply min-h-svh bg-background text-foreground;
+  }
+  a,
+  button,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
   }
   /* Glass-cockpit: every mono readout (tach/Hobbs/hours/serials/tail#/money)
      gets fixed-width digits so figures line up like an instrument display. */

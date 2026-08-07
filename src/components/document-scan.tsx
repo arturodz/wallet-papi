@@ -94,12 +94,12 @@ export function DocumentScan({
 
         {!blobEnabled && (
           <span className="text-xs text-muted-foreground">
-            Upload disabled — set BLOB_READ_WRITE_TOKEN
+            Document upload is unavailable.
           </span>
         )}
         {blobEnabled && !aiEnabled && (
           <span className="text-xs text-muted-foreground">
-            AI extraction off — set GEMINI_API_KEY
+            Automatic extraction is unavailable.
           </span>
         )}
       </div>

@@ -31,7 +31,7 @@ function SheetContent({
     <Dialog.Portal>
       <Dialog.Backdrop
         className={cn(
-          "fixed inset-0 z-50 bg-black/60 backdrop-blur-[1px]",
+          "fixed inset-0 z-50 bg-background/80 backdrop-blur-[1px]",
           "transition-opacity duration-200 ease-out",
           "data-[starting-style]:opacity-0 data-[ending-style]:opacity-0",
           "motion-reduce:transition-none",
@@ -44,14 +44,14 @@ function SheetContent({
           "fixed z-50 flex flex-col overflow-hidden bg-card text-card-foreground shadow-2xl outline-none",
           "border-border",
           // phone: bottom sheet
-          "inset-x-0 bottom-0 max-h-[88dvh] rounded-t-2xl border-t",
-          // md+: right side panel
-          "md:inset-y-0 md:right-0 md:left-auto md:bottom-auto md:h-dvh md:w-full md:max-w-md md:max-h-none md:rounded-none md:border-t-0 md:border-l",
-          // entrance — phone slides up, md+ slides in from the right
+          "inset-x-0 bottom-0 max-h-[calc(100dvh_-_env(safe-area-inset-top)_-_0.5rem)] rounded-t-2xl border-t",
+          // lg+: right side panel
+          "lg:inset-y-0 lg:right-0 lg:left-auto lg:bottom-auto lg:h-dvh lg:w-full lg:max-w-md lg:max-h-none lg:rounded-none lg:border-t-0 lg:border-l",
+          // entrance: phone slides up, lg+ slides in from the right
           "transition-[transform,opacity] duration-300 ease-out will-change-transform",
           "data-[starting-style]:translate-y-full data-[ending-style]:translate-y-full",
-          "md:data-[starting-style]:translate-y-0 md:data-[ending-style]:translate-y-0",
-          "md:data-[starting-style]:translate-x-full md:data-[ending-style]:translate-x-full",
+          "lg:data-[starting-style]:translate-y-0 lg:data-[ending-style]:translate-y-0",
+          "lg:data-[starting-style]:translate-x-full lg:data-[ending-style]:translate-x-full",
           "data-[starting-style]:opacity-60 data-[ending-style]:opacity-60",
           "motion-reduce:transition-none",
           className,
@@ -75,7 +75,7 @@ function SheetHeader({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-start justify-between gap-4 border-b border-border px-5 pt-5 pb-4">
+    <div className="flex items-start justify-between gap-4 border-b border-border pt-5 pb-4 pl-[calc(env(safe-area-inset-left)_+_1.25rem)] pr-[calc(env(safe-area-inset-right)_+_1.25rem)] lg:px-5">
       <div className="min-w-0">
         {kicker && (
           <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
@@ -89,7 +89,7 @@ function SheetHeader({
       </div>
       <SheetClose
         aria-label="Close"
-        className="-mr-1 -mt-1 grid size-8 shrink-0 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+        className="-mr-1 -mt-1 grid size-11 shrink-0 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground active:bg-muted/80 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 lg:size-8"
       >
         <svg
           viewBox="0 0 24 24"
@@ -114,7 +114,10 @@ function SheetBody({
 }: React.ComponentProps<"div">) {
   return (
     <div
-      className={cn("flex-1 overflow-y-auto px-5 py-5", className)}
+      className={cn(
+        "flex-1 overflow-y-auto py-5 pl-[calc(env(safe-area-inset-left)_+_1.25rem)] pr-[calc(env(safe-area-inset-right)_+_1.25rem)] lg:px-5",
+        className,
+      )}
       {...props}
     />
   );
@@ -128,7 +131,7 @@ function SheetFooter({
   return (
     <div
       className={cn(
-        "flex items-center gap-3 border-t border-border bg-card px-5 py-4",
+        "flex items-center gap-3 border-t border-border bg-card pt-4 pb-[calc(env(safe-area-inset-bottom)_+_1rem)] pl-[calc(env(safe-area-inset-left)_+_1.25rem)] pr-[calc(env(safe-area-inset-right)_+_1.25rem)] lg:px-5 lg:py-4",
         className,
       )}
       {...props}

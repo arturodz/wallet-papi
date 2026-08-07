@@ -45,7 +45,7 @@ export default async function EquipmentPage() {
       {rows.length === 0 ? (
         <EmptyState>
           Pre-flight: no equipment recorded
-          {writable ? " — tap + to add an item." : "."}
+          {writable ? ". Tap + to add an item." : "."}
         </EmptyState>
       ) : (
         <ul className="space-y-2">

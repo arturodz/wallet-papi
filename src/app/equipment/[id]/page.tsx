@@ -35,7 +35,7 @@ function Field({ label, value }: { label: string; value: string | null }) {
       <dt className="text-xs uppercase tracking-wide text-muted-foreground">
         {label}
       </dt>
-      <dd className="font-mono text-sm">{value && value.length ? value : "—"}</dd>
+      <dd className="font-mono text-sm">{value && value.length ? value : "Not recorded"}</dd>
     </div>
   );
 }
@@ -94,7 +94,7 @@ export default async function EquipmentDetailPage({
         <div>
           <Link
             href="/equipment"
-            className="font-mono text-xs text-muted-foreground hover:text-foreground"
+            className="inline-flex min-h-11 items-center font-mono text-xs text-muted-foreground hover:text-foreground"
           >
             ← Equipment
           </Link>

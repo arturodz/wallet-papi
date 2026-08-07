@@ -63,7 +63,7 @@ export default async function ExpensesPage() {
       {rows.length === 0 ? (
         <EmptyState>
           Pre-flight: no expenses recorded yet
-          {writable ? " — tap + to log one." : "."}
+          {writable ? ". Tap + to log one." : "."}
         </EmptyState>
       ) : (
         <ul className="space-y-2">
@@ -79,7 +79,7 @@ export default async function ExpensesPage() {
               serviceId: x.serviceId,
             };
             // Primary label: Title, falling back to payee then notes.
-            const primary = x.title ?? x.payee ?? x.notes ?? "—";
+            const primary = x.title ?? x.payee ?? x.notes ?? "Untitled expense";
             // When Title is the headline, surface the payee in the sub-line too.
             const sub = [
               x.title ? x.payee : null,

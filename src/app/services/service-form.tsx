@@ -116,7 +116,7 @@ function Fields({
               disabled={readOnly}
               defaultValue={record?.category ?? ""}
             >
-              <option value="">—</option>
+              <option value="">Select category</option>
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>
                   {c}
@@ -138,7 +138,7 @@ function Fields({
               disabled={readOnly}
               defaultValue=""
             >
-              <option value="">— none —</option>
+              <option value="">None</option>
               {intervals.map((i) => (
                 <option key={i.id} value={i.id}>
                   {i.name}

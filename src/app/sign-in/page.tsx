@@ -53,8 +53,8 @@ export default function SignInPage() {
   }
 
   return (
-    <main className="dark flex min-h-svh items-center justify-center bg-background p-6 text-foreground">
-      <Card className="w-full max-w-sm border-border/60 bg-card/80 backdrop-blur">
+    <main className="dark flex min-h-svh items-end justify-center bg-background pt-[calc(env(safe-area-inset-top)_+_1rem)] pr-[calc(env(safe-area-inset-right)_+_1rem)] pb-[calc(env(safe-area-inset-bottom)_+_1rem)] pl-[calc(env(safe-area-inset-left)_+_1rem)] text-foreground sm:items-center sm:p-6">
+      <Card className="w-full max-w-sm border-border/60 bg-card">
         <CardHeader>
           <CardTitle className="font-mono text-xl tracking-tight">
             Wallet PAPI
@@ -126,7 +126,7 @@ export default function SignInPage() {
             {mode === "sign-in" ? "No account yet?" : "Already have an account?"}{" "}
             <button
               type="button"
-              className="font-medium text-foreground underline-offset-4 hover:underline"
+              className="inline-flex min-h-11 items-center px-1 font-medium text-foreground underline-offset-4 hover:underline"
               onClick={() => {
                 setError(null);
                 setMode(mode === "sign-in" ? "sign-up" : "sign-in");

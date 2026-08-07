@@ -13,7 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SignOutButton } from "@/components/sign-out-button";
-import { StatusTile } from "@/components/status-tile";
+import { InstrumentStrip } from "@/components/instrument-strip";
 import {
   StatusBadge,
   statusColor,
@@ -115,17 +115,22 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* Instrument panel: top summary tiles */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatusTile label="Overdue" value={overdueCount} status={overdueStatus} />
-        <StatusTile label="Due Soon" value={dueSoonCount} status={dueSoonStatus} />
-        <StatusTile label="Open Squawks" value={openSquawks.length} status={squawkStatus} />
-        <StatusTile
-          label="Tach / Hobbs"
-          value={`${currentTach.toFixed(1)}`}
-          sub={`HOBBS ${(plane?.currentHobbs ?? 0).toFixed(1)} · upd ${hoursUpdated}`}
-        />
-      </div>
+      <InstrumentStrip
+        items={[
+          { label: "Overdue", value: overdueCount, status: overdueStatus },
+          { label: "Due soon", value: dueSoonCount, status: dueSoonStatus },
+          {
+            label: "Open squawks",
+            value: openSquawks.length,
+            status: squawkStatus,
+          },
+          {
+            label: "Tach",
+            value: currentTach.toFixed(1),
+            detail: `HOBBS ${(plane?.currentHobbs ?? 0).toFixed(1)} · UPD ${hoursUpdated}`,
+          },
+        ]}
+      />
 
       <div className="grid gap-6 lg:grid-cols-2">
       {/* Airworthiness list */}
@@ -179,7 +184,7 @@ export default async function Home() {
           </h2>
           <Link
             href="/squawks"
-            className="font-mono text-xs text-primary underline-offset-4 hover:underline"
+            className="inline-flex min-h-11 items-center font-mono text-xs text-primary underline-offset-4 hover:underline"
           >
             View all
           </Link>

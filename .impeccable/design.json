@@ -246,7 +246,7 @@
       "refersTo": "button-primary",
       "description": "The next decisive action in a task.",
       "html": "<button class=\"ds-btn-primary\" type=\"button\">Save service</button>",
-      "css": ".ds-btn-primary { display:inline-flex; align-items:center; justify-content:center; height:32px; padding:0 10px; border:1px solid transparent; border-radius:10px; background:var(--primary, oklch(0.922 0 0)); color:var(--primary-foreground, oklch(0.205 0.013 250)); font:500 14px/20px Geist, system-ui, sans-serif; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { background:color-mix(in oklch, var(--primary, oklch(0.922 0 0)) 80%, transparent); } .ds-btn-primary:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; box-shadow:0 0 0 3px color-mix(in oklch, var(--ring, oklch(0.62 0.05 250)) 50%, transparent); } .ds-btn-primary:active { transform:translateY(1px); }"
+      "css": ".ds-btn-primary { display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 12px; border:1px solid transparent; border-radius:10px; background:var(--primary, oklch(0.922 0 0)); color:var(--primary-foreground, oklch(0.205 0.013 250)); font:500 14px/20px Geist, system-ui, sans-serif; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { background:color-mix(in oklch, var(--primary, oklch(0.922 0 0)) 80%, transparent); } .ds-btn-primary:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; box-shadow:0 0 0 3px color-mix(in oklch, var(--ring, oklch(0.62 0.05 250)) 50%, transparent); } .ds-btn-primary:active { transform:translateY(1px); }"
     },
     {
       "name": "Outline Button",
@@ -254,7 +254,7 @@
       "refersTo": "button-outline",
       "description": "A bordered secondary action on dark surfaces.",
       "html": "<button class=\"ds-btn-outline\" type=\"button\">Cancel</button>",
-      "css": ".ds-btn-outline { display:inline-flex; align-items:center; justify-content:center; height:32px; padding:0 10px; border:1px solid var(--input, oklch(1 0 0 / 15%)); border-radius:10px; background:oklch(1 0 0 / 4.5%); color:var(--foreground, oklch(0.97 0.005 250)); font:500 14px/20px Geist, system-ui, sans-serif; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-outline:hover { background:oklch(1 0 0 / 7.5%); } .ds-btn-outline:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; box-shadow:0 0 0 3px color-mix(in oklch, var(--ring, oklch(0.62 0.05 250)) 50%, transparent); } .ds-btn-outline:active { transform:translateY(1px); }"
+      "css": ".ds-btn-outline { display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 12px; border:1px solid var(--input, oklch(1 0 0 / 15%)); border-radius:10px; background:oklch(1 0 0 / 4.5%); color:var(--foreground, oklch(0.97 0.005 250)); font:500 14px/20px Geist, system-ui, sans-serif; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-outline:hover { background:oklch(1 0 0 / 7.5%); } .ds-btn-outline:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; box-shadow:0 0 0 3px color-mix(in oklch, var(--ring, oklch(0.62 0.05 250)) 50%, transparent); } .ds-btn-outline:active { transform:translateY(1px); }"
     },
     {
       "name": "Secondary Button",
@@ -262,7 +262,7 @@
       "refersTo": "button-secondary",
       "description": "A quiet filled action for supporting choices.",
       "html": "<button class=\"ds-btn-secondary\" type=\"button\">View details</button>",
-      "css": ".ds-btn-secondary { display:inline-flex; align-items:center; justify-content:center; height:32px; padding:0 10px; border:1px solid transparent; border-radius:10px; background:var(--secondary, oklch(0.269 0.012 250)); color:var(--secondary-foreground, oklch(0.97 0.005 250)); font:500 14px/20px Geist, system-ui, sans-serif; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-secondary:hover { background:color-mix(in oklch, var(--secondary, oklch(0.269 0.012 250)), var(--foreground, oklch(0.97 0.005 250)) 5%); } .ds-btn-secondary:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; } .ds-btn-secondary:active { transform:translateY(1px); }"
+      "css": ".ds-btn-secondary { display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 12px; border:1px solid transparent; border-radius:10px; background:var(--secondary, oklch(0.269 0.012 250)); color:var(--secondary-foreground, oklch(0.97 0.005 250)); font:500 14px/20px Geist, system-ui, sans-serif; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-secondary:hover { background:color-mix(in oklch, var(--secondary, oklch(0.269 0.012 250)), var(--foreground, oklch(0.97 0.005 250)) 5%); } .ds-btn-secondary:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; } .ds-btn-secondary:active { transform:translateY(1px); }"
     },
     {
       "name": "Ghost Button",
@@ -270,7 +270,7 @@
       "refersTo": "button-ghost",
       "description": "A low-emphasis action that appears on interaction.",
       "html": "<button class=\"ds-btn-ghost\" type=\"button\">Sign out</button>",
-      "css": ".ds-btn-ghost { display:inline-flex; align-items:center; justify-content:center; height:32px; padding:0 10px; border:1px solid transparent; border-radius:10px; background:transparent; color:var(--foreground, oklch(0.97 0.005 250)); font:500 14px/20px Geist, system-ui, sans-serif; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-ghost:hover { background:var(--muted, oklch(0.269 0.012 250)); } .ds-btn-ghost:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; } .ds-btn-ghost:active { transform:translateY(1px); }"
+      "css": ".ds-btn-ghost { display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 12px; border:1px solid transparent; border-radius:10px; background:transparent; color:var(--foreground, oklch(0.97 0.005 250)); font:500 14px/20px Geist, system-ui, sans-serif; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-ghost:hover { background:var(--muted, oklch(0.269 0.012 250)); } .ds-btn-ghost:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; } .ds-btn-ghost:active { transform:translateY(1px); }"
     },
     {
       "name": "Destructive Button",
@@ -278,7 +278,7 @@
       "refersTo": "button-destructive",
       "description": "A destructive action with warning color and restrained fill.",
       "html": "<button class=\"ds-btn-destructive\" type=\"button\">Delete</button>",
-      "css": ".ds-btn-destructive { display:inline-flex; align-items:center; justify-content:center; height:32px; padding:0 10px; border:1px solid transparent; border-radius:10px; background:oklch(70.4% 0.191 22.216 / 20%); color:var(--destructive, oklch(70.4% 0.191 22.216)); font:500 14px/20px Geist, system-ui, sans-serif; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-destructive:hover { background:oklch(70.4% 0.191 22.216 / 30%); } .ds-btn-destructive:focus-visible { outline:2px solid var(--destructive, oklch(70.4% 0.191 22.216)); outline-offset:2px; box-shadow:0 0 0 3px oklch(70.4% 0.191 22.216 / 40%); } .ds-btn-destructive:active { transform:translateY(1px); }"
+      "css": ".ds-btn-destructive { display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 12px; border:1px solid transparent; border-radius:10px; background:oklch(70.4% 0.191 22.216 / 20%); color:var(--destructive, oklch(70.4% 0.191 22.216)); font:500 14px/20px Geist, system-ui, sans-serif; transition:background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-destructive:hover { background:oklch(70.4% 0.191 22.216 / 30%); } .ds-btn-destructive:focus-visible { outline:2px solid var(--destructive, oklch(70.4% 0.191 22.216)); outline-offset:2px; box-shadow:0 0 0 3px oklch(70.4% 0.191 22.216 / 40%); } .ds-btn-destructive:active { transform:translateY(1px); }"
     },
     {
       "name": "Link Button",
@@ -286,7 +286,7 @@
       "refersTo": "button-link",
       "description": "An inline action embedded in supporting copy.",
       "html": "<button class=\"ds-btn-link\" type=\"button\">View all</button>",
-      "css": ".ds-btn-link { display:inline-flex; align-items:center; height:32px; padding:0; border:0; background:transparent; color:var(--foreground, oklch(0.97 0.005 250)); font:500 14px/20px Geist, system-ui, sans-serif; text-underline-offset:4px; } .ds-btn-link:hover { text-decoration:underline; } .ds-btn-link:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; border-radius:6px; } .ds-btn-link:active { opacity:0.8; }"
+      "css": ".ds-btn-link { display:inline-flex; align-items:center; height:44px; padding:0; border:0; background:transparent; color:var(--foreground, oklch(0.97 0.005 250)); font:500 14px/20px Geist, system-ui, sans-serif; text-underline-offset:4px; } .ds-btn-link:hover { text-decoration:underline; } .ds-btn-link:focus-visible { outline:2px solid var(--ring, oklch(0.62 0.05 250)); outline-offset:2px; border-radius:6px; } .ds-btn-link:active { opacity:0.8; }"
     },
     {
       "name": "Text Input",
@@ -294,7 +294,7 @@
       "refersTo": "input",
       "description": "A compact dark field that remains zoom-safe on phones.",
       "html": "<input class=\"ds-input\" type=\"text\" value=\"N12345\" aria-label=\"Tail number\">",
-      "css": ".ds-input { width:100%; height:32px; padding:4px 10px; border:1px solid var(--input, oklch(1 0 0 / 15%)); border-radius:10px; background:oklch(1 0 0 / 4.5%); color:var(--foreground, oklch(0.97 0.005 250)); font:400 16px/24px Geist, system-ui, sans-serif; transition:border-color 150ms cubic-bezier(0.4,0,0.2,1), box-shadow 150ms cubic-bezier(0.4,0,0.2,1); } .ds-input:hover { border-color:oklch(1 0 0 / 24%); } .ds-input:focus-visible { outline:none; border-color:var(--ring, oklch(0.62 0.05 250)); box-shadow:0 0 0 3px color-mix(in oklch, var(--ring, oklch(0.62 0.05 250)) 50%, transparent); } .ds-input:active { border-color:var(--ring, oklch(0.62 0.05 250)); }"
+      "css": ".ds-input { width:100%; height:44px; padding:8px 12px; border:1px solid var(--input, oklch(1 0 0 / 15%)); border-radius:10px; background:oklch(1 0 0 / 4.5%); color:var(--foreground, oklch(0.97 0.005 250)); font:400 16px/24px Geist, system-ui, sans-serif; transition:border-color 150ms cubic-bezier(0.4,0,0.2,1), box-shadow 150ms cubic-bezier(0.4,0,0.2,1); } .ds-input:hover { border-color:oklch(1 0 0 / 24%); } .ds-input:focus-visible { outline:none; border-color:var(--ring, oklch(0.62 0.05 250)); box-shadow:0 0 0 3px color-mix(in oklch, var(--ring, oklch(0.62 0.05 250)) 50%, transparent); } .ds-input:active { border-color:var(--ring, oklch(0.62 0.05 250)); }"
     },
     {
       "name": "Active Navigation Item",
@@ -370,6 +370,7 @@
     ],
     "dos": [
       "**Do** use Ramp Black, Backlit Slate, and Elevated Slate as the default hierarchy.",
+      "**Do** keep exactly five primary tabs on touch layouts and place secondary destinations on the More route.",
       "**Do** reserve green for OK, amber for due soon, and red for overdue or destructive states.",
       "**Do** keep list data visible first; open create and edit forms in a responsive sheet.",
       "**Do** keep phone controls easy to tap even when their visual height is compact.",

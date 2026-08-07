@@ -134,7 +134,7 @@ function EquipmentFields({
       {record && (
         <Link
           href={`/equipment/${record.id}`}
-          className="inline-flex items-center gap-1 text-sm text-primary underline-offset-4 hover:underline"
+          className="inline-flex min-h-11 items-center gap-1 text-sm text-primary underline-offset-4 hover:underline"
         >
           Open full record
           <span aria-hidden>→</span>

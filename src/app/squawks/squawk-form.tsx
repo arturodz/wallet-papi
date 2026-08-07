@@ -101,7 +101,7 @@ function SquawkFields({
               disabled={readOnly}
               defaultValue={record?.severity ?? ""}
             >
-              <option value="">—</option>
+              <option value="">Select severity</option>
               <option value="low">Low</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>
@@ -127,7 +127,7 @@ function SquawkFields({
               disabled={readOnly}
               defaultValue={record?.equipmentId ?? ""}
             >
-              <option value="">— none —</option>
+              <option value="">None</option>
               {equipment.map((o) => (
                 <option key={o.id} value={o.id}>
                   {o.label}
@@ -148,7 +148,7 @@ function SquawkFields({
             disabled={readOnly}
             defaultValue={record?.resolvedByServiceId ?? ""}
           >
-            <option value="">— none —</option>
+            <option value="">None</option>
             {services.map((o) => (
               <option key={o.id} value={o.id}>
                 {o.label}

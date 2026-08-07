@@ -69,8 +69,8 @@ components:
     textColor: "{colors.ramp-black}"
     typography: "{typography.compact-body}"
     rounded: "{rounded.lg}"
-    padding: "6px 10px"
-    height: "32px"
+    padding: "10px 12px"
+    height: "44px"
   button-primary-hover:
     backgroundColor: "oklch(0.922 0 0 / 80%)"
     textColor: "{colors.ramp-black}"
@@ -79,8 +79,8 @@ components:
     textColor: "{colors.instrument-white}"
     typography: "{typography.compact-body}"
     rounded: "{rounded.lg}"
-    padding: "6px 10px"
-    height: "32px"
+    padding: "10px 12px"
+    height: "44px"
   button-outline-hover:
     backgroundColor: "oklch(1 0 0 / 7.5%)"
     textColor: "{colors.instrument-white}"
@@ -89,35 +89,35 @@ components:
     textColor: "{colors.instrument-white}"
     typography: "{typography.compact-body}"
     rounded: "{rounded.lg}"
-    padding: "6px 10px"
-    height: "32px"
+    padding: "10px 12px"
+    height: "44px"
   button-ghost:
     backgroundColor: "transparent"
     textColor: "{colors.instrument-white}"
     typography: "{typography.compact-body}"
     rounded: "{rounded.lg}"
-    padding: "6px 10px"
-    height: "32px"
+    padding: "10px 12px"
+    height: "44px"
   button-destructive:
     backgroundColor: "oklch(70.4% 0.191 22.216 / 20%)"
     textColor: "{colors.warning-red}"
     typography: "{typography.compact-body}"
     rounded: "{rounded.lg}"
-    padding: "6px 10px"
-    height: "32px"
+    padding: "10px 12px"
+    height: "44px"
   button-link:
     backgroundColor: "transparent"
     textColor: "{colors.instrument-white}"
     typography: "{typography.compact-body}"
     padding: "0"
-    height: "32px"
+    height: "44px"
   input:
     backgroundColor: "oklch(1 0 0 / 4.5%)"
     textColor: "{colors.instrument-white}"
     typography: "{typography.body}"
     rounded: "{rounded.lg}"
-    padding: "4px 10px"
-    height: "32px"
+    padding: "8px 12px"
+    height: "44px"
   card:
     backgroundColor: "{colors.backlit-slate}"
     textColor: "{colors.instrument-white}"
@@ -212,9 +212,9 @@ The Ramp Black palette behaves like a dim instrument panel: quiet until a functi
 The system uses tonal layering first, fine one-pixel rings second, and shadows only when state or physical overlay requires them. Cards remain flat at rest. Sheets receive structural lift because they sit above the task. Annunciator glows are status signals, not ambient decoration.
 
 ### Shadow Vocabulary
-- **Clear Glow** (`0 0 18px -6px rgba(16, 185, 129, 0.7)`): An OK status tile when confirmation deserves emphasis.
-- **Caution Glow** (`0 0 18px -6px rgba(245, 158, 11, 0.7)`): A due-soon status tile.
-- **Warning Glow** (`0 0 18px -6px rgba(239, 68, 68, 0.8)`): An overdue status tile.
+- **Clear Glow** (`0 0 18px -6px rgba(16, 185, 129, 0.7)`): Exceptional all-clear confirmation only.
+- **Caution Glow** (`0 0 18px -6px rgba(245, 158, 11, 0.7)`): Exceptional due-soon callout only.
+- **Warning Glow** (`0 0 18px -6px rgba(239, 68, 68, 0.8)`): Exceptional overdue callout only.
 - **Sheet Lift** (`0 25px 50px -12px rgb(0 0 0 / 0.25)`): Bottom sheets and right-side panels only.
 
 ### Named Rules
@@ -245,25 +245,26 @@ Components are compact and confident. Their shapes are familiar, their targets r
 - **Internal Padding:** Compact cards use `{spacing.md}`; standard cards use `{spacing.lg}`.
 
 ### Inputs / Fields
-- **Style:** Thirty-two-pixel controls use `{rounded.lg}`, a quiet translucent fill, and a one-pixel input border. Mobile text remains at Body size to prevent browser zoom.
+- **Style:** Controls are forty-four pixels tall through iPhone landscape and iPad portrait, then compact to thirty-two pixels at the large breakpoint. Fields use `{rounded.lg}`, a quiet translucent fill, and a one-pixel input border. Editing text remains at Body size on touch layouts to prevent browser zoom.
 - **Focus:** Shift the border to Focus Bearing Blue and add the shared three-pixel focus ring.
 - **Error / Disabled:** Error combines Warning Red border and ring. Disabled fields reduce opacity and block interaction without hiding their value.
 
 ### Navigation
-- **Style:** Desktop uses a fixed 224-pixel left rail with forty-four-pixel rows. Phone uses a sticky top identity bar and a bottom tab bar with safe-area padding. Active items use Elevated Slate or Instrument White; inactive items stay Muted Readout. Icons remain simple sixteen to twenty pixel line forms.
+- **Style:** Desktop and iPad landscape use a fixed 224-pixel left rail from the large breakpoint. Phone and iPad portrait use a safe-area-aware identity bar and exactly five bottom tabs: Dashboard, Services, Expenses, Squawks, and More. More is a normal route that exposes every secondary destination. Active items use Elevated Slate or Instrument White; inactive items stay Muted Readout.
 
-### Status Tile
-- **Style:** A compact instrument cluster of uppercase Label, large mono Display value, and optional mono subline. A semantic border and constrained glow communicate readiness.
-- **Behavior:** Values use tabular figures. Neutral tiles use Quiet Slate and no glow.
+### Instrument Strip
+- **Style:** Related measurements share one bordered strip with internal dividers. Use two columns on phone and four on larger layouts. Never split summary measurements into identical floating cards.
+- **Behavior:** Values use tabular figures and semantic text color. Status dots pair color with labels. Individual cells never glow.
 
 ### Sheets
-- **Style:** Create and edit work opens as a bottom sheet on phone and a right-side panel on larger screens. Headers and footers remain fixed while the form body scrolls.
+- **Style:** Create and edit work opens as a safe-area-aware bottom sheet through iPhone landscape and iPad portrait, then becomes a right-side panel at the large breakpoint. Headers and footers remain fixed while the form body scrolls.
 - **Motion:** Backdrops fade in 200ms; panels transform in 300ms with ease-out timing. Reduced-motion users receive no transition.
 
 ## Do's and Don'ts
 
 ### Do:
 - **Do** use Ramp Black, Backlit Slate, and Elevated Slate as the default hierarchy.
+- **Do** keep exactly five primary tabs on touch layouts and place secondary destinations on the More route.
 - **Do** reserve green for OK, amber for due soon, and red for overdue or destructive states.
 - **Do** keep list data visible first; open create and edit forms in a responsive sheet.
 - **Do** keep phone controls easy to tap even when their visual height is compact.

@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Wallet PAPI",
     short_name: "PAPI",
     description:
-      "Aircraft logbook, expenses, and total cost of ownership — your glass-cockpit wallet.",
+      "Aircraft maintenance, expenses, and total cost of ownership in one logbook.",
     id: "/",
     start_url: "/",
     scope: "/",
