@@ -56,7 +56,7 @@ export default async function IntervalsPage() {
       {computed.length === 0 ? (
         <EmptyState>
           Pre-flight: no intervals defined
-          {writable ? " — tap + to add one." : "."}
+          {writable ? ". Tap + to add one." : "."}
         </EmptyState>
       ) : (
         <ul className="space-y-2">

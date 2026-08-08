@@ -3,18 +3,25 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Gauge,
-  Plane,
-  Timer,
-  Wrench,
-  Receipt,
-  TriangleAlert,
-  Radio,
   DollarSign,
+  Gauge,
+  MoreHorizontal,
+  Plane,
+  Radio,
+  Receipt,
   StickyNote,
+  Timer,
+  TriangleAlert,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  activeMobileHref,
+  desktopDestinations,
+  isRouteActive,
+  primaryMobileDestinations,
+} from "@/lib/navigation";
 import {
   AircraftSwitcher,
   type AircraftOption,
@@ -22,22 +29,28 @@ import {
 
 type NavLink = { href: string; label: string; icon: LucideIcon };
 
-const links: NavLink[] = [
-  { href: "/", label: "Dashboard", icon: Gauge },
-  { href: "/aircraft", label: "Aircraft", icon: Plane },
-  { href: "/intervals", label: "Intervals", icon: Timer },
-  { href: "/services", label: "Services", icon: Wrench },
-  { href: "/expenses", label: "Expenses", icon: Receipt },
-  { href: "/squawks", label: "Squawks", icon: TriangleAlert },
-  { href: "/equipment", label: "Equipment", icon: Radio },
-  { href: "/tco", label: "TCO", icon: DollarSign },
-  { href: "/notes", label: "Notes", icon: StickyNote },
-];
+const iconByHref: Record<string, LucideIcon> = {
+  "/": Gauge,
+  "/aircraft": Plane,
+  "/intervals": Timer,
+  "/services": Wrench,
+  "/expenses": Receipt,
+  "/squawks": TriangleAlert,
+  "/equipment": Radio,
+  "/tco": DollarSign,
+  "/notes": StickyNote,
+  "/more": MoreHorizontal,
+};
 
-function isActive(pathname: string, href: string): boolean {
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
+const desktopLinks: NavLink[] = desktopDestinations.map((destination) => ({
+  ...destination,
+  icon: iconByHref[destination.href],
+}));
+
+const mobileLinks: NavLink[] = primaryMobileDestinations.map((destination) => ({
+  ...destination,
+  icon: iconByHref[destination.href],
+}));
 
 export function Nav({
   aircraft = [],
@@ -47,11 +60,12 @@ export function Nav({
   activeId?: string | null;
 }) {
   const pathname = usePathname() ?? "/";
+  const activeMobileTab = activeMobileHref(pathname);
 
   return (
     <>
-      {/* iPad / desktop: fixed left sidebar (md+) */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-56 flex-col border-r border-border bg-card/80 backdrop-blur md:flex">
+      {/* iPad landscape / desktop: fixed left sidebar (lg+) */}
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-56 flex-col border-r border-border bg-card/80 backdrop-blur lg:flex">
         <div className="flex items-center gap-2 px-5 py-5">
           <span className="flex items-center gap-1" aria-hidden>
             <span className="size-2 rounded-full bg-slate-100" />
@@ -66,9 +80,9 @@ export function Nav({
         <div className="px-3 pb-2">
           <AircraftSwitcher aircraft={aircraft} activeId={activeId} />
         </div>
-        <nav className="flex flex-1 flex-col gap-1 px-3 py-2">
-          {links.map((l) => {
-            const active = isActive(pathname, l.href);
+        <nav aria-label="Primary navigation" className="flex flex-1 flex-col gap-1 px-3 py-2">
+          {desktopLinks.map((l) => {
+            const active = isRouteActive(pathname, l.href);
             const Icon = l.icon;
             return (
               <Link
@@ -90,8 +104,15 @@ export function Nav({
         </nav>
       </aside>
 
-      {/* Phone: top brand bar + plane switcher (md hidden) */}
-      <header className="sticky top-0 z-40 flex items-center gap-3 border-b border-border bg-card/80 px-4 py-3 backdrop-blur md:hidden">
+      {/* Phone and iPad portrait: safe-area-aware top bar */}
+      <header
+        className="sticky top-0 z-40 flex items-center gap-3 border-b border-border bg-card/95 px-4 pb-3 lg:hidden"
+        style={{
+          paddingTop: "calc(env(safe-area-inset-top) + 0.75rem)",
+          paddingLeft: "calc(env(safe-area-inset-left) + 1rem)",
+          paddingRight: "calc(env(safe-area-inset-right) + 1rem)",
+        }}
+      >
         <span className="flex items-center gap-1" aria-hidden>
           <span className="size-2 rounded-full bg-slate-100" />
           <span className="size-2 rounded-full bg-slate-100" />
@@ -106,14 +127,19 @@ export function Nav({
         </div>
       </header>
 
-      {/* Phone: fixed bottom tab bar (md hidden), safe-area inset */}
+      {/* Phone and iPad portrait: safe-area-aware fixed bottom tabs */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/90 backdrop-blur md:hidden"
-        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+        aria-label="Primary navigation"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 lg:hidden"
+        style={{
+          paddingBottom: "env(safe-area-inset-bottom)",
+          paddingLeft: "env(safe-area-inset-left)",
+          paddingRight: "env(safe-area-inset-right)",
+        }}
       >
-        <ul className="grid grid-cols-8">
-          {links.map((l) => {
-            const active = isActive(pathname, l.href);
+        <ul className="grid grid-cols-5">
+          {mobileLinks.map((l) => {
+            const active = activeMobileTab === l.href;
             const Icon = l.icon;
             return (
               <li key={l.href}>
@@ -121,9 +147,9 @@ export function Nav({
                   href={l.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "flex min-h-14 flex-col items-center justify-center gap-1 px-1 py-1.5 text-[10px] transition-colors",
+                    "flex min-h-16 flex-col items-center justify-center gap-1 px-1 py-1.5 text-[11px] transition-colors active:bg-muted/60",
                     active
-                      ? "text-foreground"
+                      ? "font-medium text-foreground"
                       : "text-muted-foreground hover:text-foreground",
                   )}
                 >

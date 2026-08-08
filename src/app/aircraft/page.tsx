@@ -35,7 +35,7 @@ export default async function AircraftPage() {
       {fleet.length === 0 ? (
         <EmptyState>
           Pre-flight: no aircraft yet
-          {writable ? " — tap + to add your first." : "."}
+          {writable ? ". Tap + to add your first." : "."}
         </EmptyState>
       ) : (
         <ul className="space-y-2">
@@ -68,7 +68,7 @@ export default async function AircraftPage() {
                       </span>
                     </div>
                     <div className="mt-0.5 truncate text-xs text-muted-foreground">
-                      {makeModel || "—"}
+                      {makeModel || "Not recorded"}
                       <span className="ml-2 font-mono tabular-nums">
                         {p.currentTach} hrs
                       </span>

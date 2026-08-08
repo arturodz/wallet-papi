@@ -171,7 +171,7 @@ function ExpenseFields({
               value={fast.category}
               onChange={(e) => fast.setCategory(e.target.value)}
             >
-              <option value="">—</option>
+              <option value="">Select category</option>
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>
                   {c}
@@ -204,7 +204,7 @@ function ExpenseFields({
             disabled={readOnly}
             defaultValue={record?.serviceId ?? ""}
           >
-            <option value="">— none —</option>
+            <option value="">None</option>
             {services.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.date} · {s.description}

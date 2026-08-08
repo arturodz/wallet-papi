@@ -23,8 +23,10 @@ export function AppChrome({
   return (
     <>
       <Nav aircraft={aircraft} activeId={activeId} />
-      {/* Content offset: bottom tab bar on phone (pb-24), sidebar on md+ (pl-56). */}
-      <div className="min-h-svh pb-24 md:pb-0 md:pl-56">{children}</div>
+      {/* Keep phone content above the five-tab bar and iPhone Home Indicator. */}
+      <div className="min-h-svh pb-[calc(5rem+env(safe-area-inset-bottom))] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] lg:p-0 lg:pl-56">
+        {children}
+      </div>
     </>
   );
 }

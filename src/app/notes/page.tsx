@@ -37,7 +37,7 @@ export default async function NotesPage() {
       </ListHeader>
 
       {sorted.length === 0 ? (
-        <EmptyState>No notes yet — jot down anything worth remembering.</EmptyState>
+        <EmptyState>No notes yet. Add anything worth remembering.</EmptyState>
       ) : (
         <ul className="space-y-2">
           {sorted.map((n) => {

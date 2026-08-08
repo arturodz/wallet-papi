@@ -13,7 +13,7 @@ export default function OfflinePage() {
       <h1 className="font-mono text-2xl">No signal</h1>
       <p className="text-muted-foreground">
         You&apos;re offline and this page isn&apos;t cached yet. Reconnect to
-        log services, expenses, or squawks — Wallet PAPI needs a link to write.
+        log services, expenses, or squawks. Wallet PAPI needs a link to write.
       </p>
       <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
         Awaiting clearance

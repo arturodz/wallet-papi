@@ -59,7 +59,7 @@ export default async function SquawksPage() {
   }));
   const serviceOptions: SquawkFormOption[] = serviceRows.map((s) => ({
     id: s.id,
-    label: `${s.date} — ${s.description}`,
+    label: `${s.date} · ${s.description}`,
   }));
 
   return (
@@ -76,7 +76,7 @@ export default async function SquawksPage() {
 
       {sorted.length === 0 ? (
         <EmptyState>
-          Pre-flight: no squawks — you&apos;re cleared.
+          No squawks. You&apos;re cleared.
         </EmptyState>
       ) : (
         <ul className="space-y-2">
@@ -117,7 +117,7 @@ export default async function SquawksPage() {
                   {(sub || s.description) && (
                     <div className="mt-0.5 truncate text-xs text-muted-foreground">
                       {sub}
-                      {sub && s.description ? " — " : ""}
+                      {sub && s.description ? " · " : ""}
                       {s.description}
                     </div>
                   )}

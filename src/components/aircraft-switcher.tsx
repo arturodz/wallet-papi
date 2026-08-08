@@ -40,7 +40,7 @@ export function AircraftSwitcher({
       onChange={onChange}
       disabled={pending}
       className={
-        "h-9 w-full rounded-md border border-border bg-card/60 px-2 font-mono text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50 " +
+        "h-11 w-full rounded-md border border-border bg-card/60 px-2 font-mono text-base text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50 lg:h-9 lg:text-sm " +
         (className ?? "")
       }
     >

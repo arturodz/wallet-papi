@@ -56,7 +56,7 @@ export default async function ServicesPage() {
       {rows.length === 0 ? (
         <EmptyState>
           Pre-flight: no services logged yet
-          {writable ? " — tap + to log one." : "."}
+          {writable ? ". Tap + to log one." : "."}
         </EmptyState>
       ) : (
         <ul className="space-y-2">

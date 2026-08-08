@@ -7,6 +7,7 @@ import { NoAircraft } from "@/components/no-aircraft";
 import { canWrite, type Role } from "@/lib/auth/roles";
 import { formatUSD } from "@/lib/money";
 import { computeTco, computeMonthlyBurn } from "@/lib/tco";
+import { InstrumentStrip } from "@/components/instrument-strip";
 import { AircraftForm } from "./aircraft-form";
 import {
   Card,
@@ -61,47 +62,31 @@ export default async function TcoPage() {
     <main className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
       <h1 className="font-mono text-2xl">Total Cost of Ownership</h1>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-normal text-muted-foreground">
-              Lifetime total
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="font-mono text-3xl tabular-nums">
-              {formatUSD(tco.totalCents)}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-normal text-muted-foreground">
-              Cost per hour
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {tco.costPerHourCents == null ? (
-              <div>
-                <div className="font-mono text-3xl tabular-nums">—</div>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  set acquisition tach to enable
-                </p>
-              </div>
-            ) : (
-              <div>
-                <div className="font-mono text-3xl tabular-nums">
+      <InstrumentStrip
+        label="Ownership cost summary"
+        items={[
+          {
+            label: "Lifetime total",
+            value: formatUSD(tco.totalCents),
+          },
+          {
+            label: "Cost per hour",
+            value:
+              tco.costPerHourCents == null ? (
+                "N/A"
+              ) : (
+                <>
                   {formatUSD(tco.costPerHourCents)}
                   <span className="text-sm text-muted-foreground"> / hr</span>
-                </div>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  operating costs only — excludes acquisition
-                </p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+                </>
+              ),
+            detail:
+              tco.costPerHourCents == null
+                ? "SET ACQUISITION TACH"
+                : "OPERATING COSTS, EXCLUDES ACQUISITION",
+          },
+        ]}
+      />
 
       <Card>
         <CardHeader>
